@@ -1,2 +1,2 @@
-# jtrue
-JTrue - a java validation library
+# JTrue
+JTrue - a Java validation library
