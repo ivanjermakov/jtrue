@@ -1,0 +1,10 @@
+language: java
+sudo: false
+jdk:
+  - openjdk8
+env:
+  - COVERALLS_REPO_TOKEN=KSAlJaw1Jrb5Fj41wELVzpyw9jbajaEBC
+script:
+  - gradle test
+after_success:
+  - gradle jacocoTestReport coveralls
