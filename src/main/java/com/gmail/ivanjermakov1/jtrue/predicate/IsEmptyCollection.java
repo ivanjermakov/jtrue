@@ -1,4 +1,4 @@
-package com.gmail.ivanjermakov1.jtrue.util;
+package com.gmail.ivanjermakov1.jtrue.predicate;
 
 import java.util.Collection;
 import java.util.function.Predicate;
