@@ -11,41 +11,16 @@ import java.util.stream.Collectors;
 
 public class Validator<T> implements Validatable<T> {
 
-	private final Throwable baseThrowable;
+	private static final Throwable DEFAULT_ERROR = new InvalidObjectException("invalid object");
+
 	private final List<Check<T>> checks;
 
 	public Validator() {
-		this(new InvalidObjectException("invalid object"), new ArrayList<>());
+		this(new ArrayList<>());
 	}
 
-	public Validator(Throwable baseThrowable) {
-		this(baseThrowable, new ArrayList<>());
-	}
-
-	private Validator(Throwable baseThrowable, List<Check<T>> checks) {
-		this.baseThrowable = baseThrowable;
+	private Validator(List<Check<T>> checks) {
 		this.checks = checks;
-	}
-
-	public <R> PrimitiveValidator<R, T> map(Function<T, R> mapFunction) {
-		return new PrimitiveValidator<R, T>(this, mapFunction);
-	}
-
-	public Validator<T> check(Predicate<T> predicate) {
-		return check(predicate, () -> baseThrowable);
-	}
-
-	public Validator<T> check(Predicate<T> predicate, String message) {
-		return check(predicate, () -> baseThrowable, () -> message);
-	}
-
-	public Validator<T> check(Predicate<T> predicate, Supplier<Throwable> throwableSupplier) {
-		return check(predicate, throwableSupplier, () -> throwableSupplier.get().getMessage());
-	}
-
-	private Validator<T> check(Predicate<T> predicate, Supplier<Throwable> throwableSupplier, Supplier<String> messageSupplier) {
-		checks.add(new Check<>(predicate, throwableSupplier, messageSupplier));
-		return this;
 	}
 
 	@Override
@@ -57,6 +32,10 @@ public class Validator<T> implements Validatable<T> {
 	}
 
 	@Override
+	public void throwInvalid(T target) throws Throwable {
+		if (!validate(target)) throw DEFAULT_ERROR;
+	}
+
 	public void throwInvalid(T target, Supplier<Throwable> throwableSupplier) throws Throwable {
 		if (!validate(target)) throw throwableSupplier.get();
 	}
@@ -68,6 +47,27 @@ public class Validator<T> implements Validatable<T> {
 				.filter(cc -> !cc.getResult())
 				.map(cc -> cc.getCheck().getThrowableSupplier().get())
 				.collect(Collectors.toList());
+	}
+
+	public <R> PrimitiveValidator<R, T> map(Function<T, R> mapFunction) {
+		return new PrimitiveValidator<R, T>(this, mapFunction);
+	}
+
+	Validator<T> check(Predicate<T> predicate) {
+		return check(predicate, () -> DEFAULT_ERROR);
+	}
+
+	Validator<T> check(Predicate<T> predicate, String message) {
+		return check(predicate, () -> defaultErrorWithMessage(message));
+	}
+
+	private Validator<T> check(Predicate<T> predicate, Supplier<Throwable> throwableSupplier) {
+		checks.add(new Check<>(predicate, throwableSupplier));
+		return this;
+	}
+
+	private Throwable defaultErrorWithMessage(String message) {
+		return new InvalidObjectException(message);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.gmail.ivanjermakov1.jtrue.core;
 
-import java.util.function.Supplier;
+import com.gmail.ivanjermakov1.jtrue.exception.InvalidObjectException;
 
 /**
  * Parent interface for all object validators
@@ -21,12 +21,11 @@ public interface Validatable<T> {
 	/**
 	 * Throws {@link Throwable} when target is invalid
 	 *
-	 * @param target            verification target object
-	 * @param throwableSupplier supplier of throwable that will be thrown if target is invalid
+	 * @param target verification target object
 	 * @throws Throwable when target is invalid
 	 */
-	default void throwInvalid(T target, Supplier<Throwable> throwableSupplier) throws Throwable {
-		if (!validate(target)) throw throwableSupplier.get();
+	default void throwInvalid(T target) throws Throwable {
+		if (!validate(target)) throw new InvalidObjectException("invalid object");
 	}
 
 }

@@ -7,12 +7,10 @@ public class Check<T> {
 
 	private final Predicate<T> predicate;
 	private final Supplier<Throwable> throwableSupplier;
-	private final Supplier<String> messageSupplier;
 
-	public Check(Predicate<T> predicate, Supplier<Throwable> throwableSupplier, Supplier<String> messageSupplier) {
+	public Check(Predicate<T> predicate, Supplier<Throwable> throwableSupplier) {
 		this.predicate = predicate;
 		this.throwableSupplier = throwableSupplier;
-		this.messageSupplier = messageSupplier;
 	}
 
 	public CompleteCheck<T> test(T target) {
@@ -25,10 +23,6 @@ public class Check<T> {
 
 	public Supplier<Throwable> getThrowableSupplier() {
 		return throwableSupplier;
-	}
-
-	public Supplier<String> getMessageSupplier() {
-		return messageSupplier;
 	}
 
 }
