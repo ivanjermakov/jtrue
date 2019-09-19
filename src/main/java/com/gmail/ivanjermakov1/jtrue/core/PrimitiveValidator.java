@@ -2,7 +2,6 @@ package com.gmail.ivanjermakov1.jtrue.core;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class PrimitiveValidator<T, P> {
 
@@ -20,10 +19,6 @@ public class PrimitiveValidator<T, P> {
 
 	public Validator<P> check(Predicate<T> predicate, String message) {
 		return parent.check(parentPredicate(predicate), message);
-	}
-
-	public Validator<P> check(Predicate<T> predicate, Supplier<Throwable> throwableSupplier) {
-		return parent.check(parentPredicate(predicate), throwableSupplier);
 	}
 
 	private Predicate<P> parentPredicate(Predicate<T> predicate) {
