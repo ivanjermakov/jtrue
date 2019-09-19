@@ -2,28 +2,33 @@ package com.gmail.ivanjermakov1.jtrue.core;
 
 import com.gmail.ivanjermakov1.jtrue.exception.InvalidObjectException;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class Validator<T> {
+public class Validator<T> implements Validatable<T> {
 
 	private final Throwable baseThrowable;
 	private final List<Check<T>> checks;
 
 	public Validator() {
-		this(new InvalidObjectException("invalid object"), Collections.emptyList());
+		this(new InvalidObjectException("invalid object"), new ArrayList<>());
 	}
 
 	public Validator(Throwable baseThrowable) {
-		this(baseThrowable, Collections.emptyList());
+		this(baseThrowable, new ArrayList<>());
 	}
 
 	private Validator(Throwable baseThrowable, List<Check<T>> checks) {
 		this.baseThrowable = baseThrowable;
 		this.checks = checks;
+	}
+
+	public <R> PrimitiveValidator<R, T> map(Function<T, R> mapFunction) {
+		return new PrimitiveValidator<R, T>(this, mapFunction);
 	}
 
 	public Validator<T> check(Predicate<T> predicate) {
@@ -43,23 +48,25 @@ public class Validator<T> {
 		return this;
 	}
 
-	public boolean isValid(T target) {
+	@Override
+	public boolean validate(T target) {
 		return checks
 				.stream()
-				.map(c -> c.test(target).result)
+				.map(c -> c.test(target).getResult())
 				.reduce(true, (b1, b2) -> b1 && b2);
 	}
 
+	@Override
 	public void throwInvalid(T target, Supplier<Throwable> throwableSupplier) throws Throwable {
-		if (!isValid(target)) throw throwableSupplier.get();
+		if (!validate(target)) throw throwableSupplier.get();
 	}
 
 	public List<Throwable> listErrors(T target) {
 		return checks
 				.stream()
 				.map(c -> c.test(target))
-				.filter(cc -> !cc.result)
-				.map(cc -> cc.check.throwableSupplier.get())
+				.filter(cc -> !cc.getResult())
+				.map(cc -> cc.getCheck().getThrowableSupplier().get())
 				.collect(Collectors.toList());
 	}
 
