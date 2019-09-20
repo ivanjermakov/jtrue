@@ -9,6 +9,9 @@ import com.gmail.ivanjermakov1.jtrue.predicate.Equals;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -84,6 +87,33 @@ public class ValidatorIntegrationTest {
 		new Validator<SimpleObject>()
 				.map(o -> o.a).check(new Equals<>(1))
 				.throwInvalid(simpleObject, () -> new CustomException("custom message"));
+	}
+
+	@Test
+	public void shouldListErrorsEmpty() {
+		List<Throwable> errors = new Validator<SimpleObject>()
+				.map(o -> o.a).check(new Equals<>(1))
+				.listErrors(simpleObject);
+
+		assertTrue(errors.isEmpty());
+	}
+
+	@Test
+	public void shouldListOneDefaultError() {
+		List<Throwable> errors = new Validator<SimpleObject>()
+				.map(o -> o.a).check(new Equals<>(2))
+				.listErrors(simpleObject);
+
+		assertEquals(1, errors.size());
+	}
+
+	@Test
+	public void shouldListOneCustomError() {
+		List<Throwable> errors = new Validator<SimpleObject>()
+				.map(o -> o.a).check(new Equals<>(2), "custom error")
+				.listErrors(simpleObject);
+
+		assertEquals(1, errors.size());
 	}
 
 }
