@@ -9,8 +9,6 @@ plugins {
 group 'com.gmail.ivanjermakov1'
 version '0.3'
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
