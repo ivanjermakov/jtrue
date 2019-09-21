@@ -5,12 +5,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public class EmptyString implements Predicate<String> {
+public class NotEmptyString implements Predicate<String> {
 
 	@Override
 	@Contract(pure = true)
 	public boolean test(@NotNull String t) {
-		return t.isEmpty();
+		return !t.isEmpty();
 	}
 
 }
