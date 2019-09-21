@@ -3,9 +3,11 @@ package com.github.ivanjermakov.jtrue.core;
 import com.github.ivanjermakov.jtrue.exception.InvalidObjectException;
 import com.github.ivanjermakov.jtrue.function.And;
 import com.github.ivanjermakov.jtrue.function.Self;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -79,6 +81,7 @@ public class Validator<T> implements Validatable<T> {
 		public Validator<P> use(Validator<F> validator) {
 			return new Validator<>(
 					parent.errorSupplier,
+					parent.errorWithMessageSupplier,
 					Stream.concat(
 							parent.rules
 									.stream(),
@@ -101,6 +104,7 @@ public class Validator<T> implements Validatable<T> {
 	private static final String DEFAULT_ERROR_MESSAGE = "invalid object";
 
 	private final Supplier<Throwable> errorSupplier;
+	private final Optional<Function<String, Throwable>> errorWithMessageSupplier;
 	private final List<Rule<T>> rules;
 
 	/**
@@ -108,11 +112,12 @@ public class Validator<T> implements Validatable<T> {
 	 * TODO: example
 	 */
 	public Validator() {
-		this(() -> new InvalidObjectException(DEFAULT_ERROR_MESSAGE), Collections.emptyList());
+		this(() -> new InvalidObjectException(DEFAULT_ERROR_MESSAGE), Optional.empty(), Collections.emptyList());
 	}
 
-	private Validator(Supplier<Throwable> errorSupplier, List<Rule<T>> rules) {
+	private Validator(Supplier<Throwable> errorSupplier, Optional<Function<String, Throwable>> errorWithMessageSupplier, List<Rule<T>> rules) {
 		this.errorSupplier = errorSupplier;
+		this.errorWithMessageSupplier = errorWithMessageSupplier;
 		this.rules = rules;
 	}
 
@@ -167,7 +172,25 @@ public class Validator<T> implements Validatable<T> {
 	 * @return validator, configured for that exception
 	 */
 	public Validator<T> throwing(Supplier<Throwable> throwableSupplier) {
-		return new Validator<>(throwableSupplier, rules);
+		return new Validator<>(throwableSupplier, errorWithMessageSupplier, rules);
+	}
+
+	/**
+	 * Configure custom exception for failing validation.
+	 * <br><br>
+	 * Can be used with terminal operation {@link #throwInvalid(T)}
+	 * This is intermediate operation.
+	 * <br><br>
+	 * It is different from {@link #throwing(Supplier)} because it allows to throw custom exception with detailed
+	 * validation information within error message, just as it returns from {@link #listErrors(T)}.
+	 * Resulting error message contains list of validation messages, separated with {@literal ";"}
+	 * Has more priority than {@link #throwing(Supplier)}, so if both applied - this one will operate.
+	 *
+	 * @param errorWithMessageSupplier supplier of exception to be thrown
+	 * @return validator, configured for that exception
+	 */
+	public Validator<T> throwing(@NotNull Function<String, Throwable> errorWithMessageSupplier) {
+		return new Validator<T>(errorSupplier, Optional.of(errorWithMessageSupplier), rules);
 	}
 
 	/**
@@ -197,7 +220,17 @@ public class Validator<T> implements Validatable<T> {
 	 */
 	@Override
 	public void throwInvalid(T target) throws Throwable {
-		if (!validate(target)) throw errorSupplier.get();
+		if (!validate(target)) {
+			if (errorWithMessageSupplier.isPresent()) {
+				throw errorWithMessageSupplier.get().apply(rules
+						.stream()
+						.map(Rule::getMessage)
+						.collect(Collectors.joining("; "))
+				);
+			} else {
+				throw errorSupplier.get();
+			}
+		}
 	}
 
 	/**
@@ -226,6 +259,7 @@ public class Validator<T> implements Validatable<T> {
 	private Validator<T> addRule(Predicate<T> predicate, String message) {
 		return new Validator<>(
 				errorSupplier,
+				errorWithMessageSupplier,
 				Stream
 						.concat(
 								rules.stream(),
