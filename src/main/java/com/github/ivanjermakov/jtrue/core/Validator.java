@@ -14,6 +14,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+//TODO: AND/OR strategy for rules
+
 /**
  * Main implementation of {@link Validatable}. Used to validate java object instances.
  * <br><br>
