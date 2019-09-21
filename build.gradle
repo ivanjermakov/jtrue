@@ -1,20 +1,17 @@
 plugins {
     id 'java'
+    id 'maven'
 
 //    code coverage
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.8.4'
 }
 
-group 'com.github.ivanjermakov1'
+group 'com.github.ivanjermakov'
 version '0.3'
 
-allprojects {
-    repositories {
-        mavenCentral()
-
-        maven { url "https://jitpack.io" }
-    }
+repositories {
+    mavenCentral()
 }
 
 test {
