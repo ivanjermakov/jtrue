@@ -7,12 +7,14 @@ import com.github.ivanjermakov.jtrue.model.CustomException;
 import com.github.ivanjermakov.jtrue.model.EmptyObject;
 import com.github.ivanjermakov.jtrue.model.SimpleObject;
 import com.github.ivanjermakov.jtrue.predicate.Equals;
+import com.github.ivanjermakov.jtrue.predicate.False;
 import com.github.ivanjermakov.jtrue.predicate.NotNull;
 import com.github.ivanjermakov.jtrue.predicate.Null;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -195,6 +197,23 @@ public class ValidatorIntegrationTest {
 				.listErrors(simpleObject);
 
 		assertEquals(1, errors.size());
+	}
+
+	@Test
+	public void shouldThrowCustomExceptionWithErrors() {
+		try {
+			new Validator<SimpleObject>()
+					.map(SimpleObject::getA).check(new Equals<>(2), "custom error")
+					.check(new False<>(), "message1")
+					.throwing((Function<String, Throwable>) CustomException::new)
+					.throwInvalid(simpleObject);
+
+			fail();
+		} catch (CustomException e) {
+			assertEquals("custom error; message1", e.getMessage());
+		} catch (Throwable throwable) {
+			fail();
+		}
 	}
 
 }

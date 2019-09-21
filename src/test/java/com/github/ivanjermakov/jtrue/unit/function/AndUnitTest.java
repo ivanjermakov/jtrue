@@ -18,14 +18,4 @@ public class AndUnitTest {
 		assertFalse(new And().apply(true, false));
 	}
 
-	@Test
-	public void shouldBeFalse2() {
-		assertFalse(new And().apply(false, true));
-	}
-
-	@Test(expected = NullPointerException.class)
-	public void shouldThrowException_WithNull() {
-		new And().apply(true, null);
-	}
-
 }
