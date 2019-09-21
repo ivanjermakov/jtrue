@@ -23,9 +23,4 @@ public class IsEmptyStringUnitTest {
 		assertFalse(new IsEmptyString().test(" "));
 	}
 
-	@Test
-	public void shouldNotBeEmptyWithNull() {
-		assertFalse(new IsEmptyString().test(null));
-	}
-
 }

@@ -18,9 +18,4 @@ public class IsBlankUnitTest {
 		assertFalse(new IsBlank().test("str"));
 	}
 
-	@Test
-	public void shouldNotBeBlankWithNull() {
-		assertFalse(new IsBlank().test(null));
-	}
-
 }
