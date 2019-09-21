@@ -24,11 +24,11 @@ public class Validator<T> implements Validatable<T> {
 		}
 
 		public Validator<P> check(Predicate<T> predicate) {
-			return parent.check(parentPredicate(predicate));
+			return parent.addCheck(parentPredicate(predicate));
 		}
 
 		public Validator<P> check(Predicate<T> predicate, String message) {
-			return parent.check(parentPredicate(predicate), message);
+			return parent.addCheck(parentPredicate(predicate), message);
 		}
 
 		public Validator<P> use(Validator<T> b) {
@@ -92,6 +92,10 @@ public class Validator<T> implements Validatable<T> {
 		return new PrimitiveValidator<>(this, mapFunction);
 	}
 
+	public Validator<T> check(Predicate<T> predicate) {
+		return map(o -> o).check(predicate);
+	}
+
 	public Validator<T> throwing(Supplier<Throwable> throwableSupplier) {
 		return new Validator<>(throwableSupplier, checks);
 	}
@@ -100,15 +104,15 @@ public class Validator<T> implements Validatable<T> {
 		return errorSupplier;
 	}
 
-	private Validator<T> check(Predicate<T> predicate) {
-		return check(predicate, errorSupplier);
+	private Validator<T> addCheck(Predicate<T> predicate) {
+		return addCheck(predicate, errorSupplier);
 	}
 
-	private Validator<T> check(Predicate<T> predicate, String message) {
-		return check(predicate, () -> errorWithMessage.apply(message));
+	private Validator<T> addCheck(Predicate<T> predicate, String message) {
+		return addCheck(predicate, () -> errorWithMessage.apply(message));
 	}
 
-	private Validator<T> check(Predicate<T> predicate, Supplier<Throwable> throwableSupplier) {
+	private Validator<T> addCheck(Predicate<T> predicate, Supplier<Throwable> throwableSupplier) {
 		checks.add(new Check<>(predicate, throwableSupplier));
 		return this;
 	}

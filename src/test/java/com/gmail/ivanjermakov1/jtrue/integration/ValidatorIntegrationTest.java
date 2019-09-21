@@ -7,6 +7,7 @@ import com.gmail.ivanjermakov1.jtrue.model.CustomException;
 import com.gmail.ivanjermakov1.jtrue.model.EmptyObject;
 import com.gmail.ivanjermakov1.jtrue.model.SimpleObject;
 import com.gmail.ivanjermakov1.jtrue.predicate.Equals;
+import com.gmail.ivanjermakov1.jtrue.predicate.IsNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,6 +51,15 @@ public class ValidatorIntegrationTest {
 	public void shouldValidateSimpleObjectMap() {
 		boolean isValid = new Validator<SimpleObject>()
 				.map(SimpleObject::getA).check(new Equals<>(1))
+				.validate(simpleObject);
+
+		assertTrue(isValid);
+	}
+
+	@Test
+	public void shouldValidateSimpleObjectWithCheck() {
+		boolean isValid = new Validator<SimpleObject>()
+				.check(new IsNotNull<>())
 				.validate(simpleObject);
 
 		assertTrue(isValid);
