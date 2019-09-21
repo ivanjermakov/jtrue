@@ -1,5 +1,7 @@
 package com.gmail.ivanjermakov1.jtrue.predicate;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Predicate;
 
 public class Equals<T> implements Predicate<T> {
@@ -11,7 +13,7 @@ public class Equals<T> implements Predicate<T> {
 	}
 
 	@Override
-	public boolean test(T t) {
+	public boolean test(@NotNull T t) {
 		return t.equals(to);
 	}
 
