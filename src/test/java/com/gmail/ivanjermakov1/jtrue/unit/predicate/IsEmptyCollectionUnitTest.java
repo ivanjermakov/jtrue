@@ -20,9 +20,4 @@ public class IsEmptyCollectionUnitTest {
 		assertFalse(new IsEmptyCollection<>().test(Collections.singletonList(new Object())));
 	}
 
-	@Test
-	public void shouldNotBeEmptyWithNull() {
-		assertFalse(new IsEmptyCollection<>().test(null));
-	}
-
 }
