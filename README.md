@@ -52,8 +52,7 @@ In Hello world example, line `new IsBlank()` may caught your eye. It is one of p
 [GitHub issues](https://github.com/ivanjermakov/jtrue/issues)
 
 ## Documentation
-<!--TODO: javadoc-->
-[JavaDoc]()
+[JavaDoc](https://ivanjermakov.github.io/jtrue/docs/)
 
 ## Binaries
 
