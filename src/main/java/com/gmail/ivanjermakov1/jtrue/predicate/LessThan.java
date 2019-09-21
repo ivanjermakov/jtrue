@@ -5,18 +5,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public class Equals<T> implements Predicate<T> {
+public class LessThan<T extends Comparable<T>> implements Predicate<T> {
 
-	private final T to;
+	private final T then;
 
-	public Equals(T to) {
-		this.to = to;
+	public LessThan(T then) {
+		this.then = then;
 	}
 
 	@Override
 	@Contract(pure = true)
 	public boolean test(@NotNull T t) {
-		return t.equals(to);
+		return t.compareTo(then) < 0;
 	}
 
 }

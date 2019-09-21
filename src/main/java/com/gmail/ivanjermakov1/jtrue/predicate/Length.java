@@ -5,12 +5,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public class EmptyString implements Predicate<String> {
+public class Length implements Predicate<String> {
+
+	private final int length;
+
+	public Length(int length) {
+		this.length = length;
+	}
 
 	@Override
 	@Contract(pure = true)
-	public boolean test(@NotNull String t) {
-		return t.isEmpty();
+	public boolean test(@NotNull String s) {
+		return s.length() == length;
 	}
 
 }
