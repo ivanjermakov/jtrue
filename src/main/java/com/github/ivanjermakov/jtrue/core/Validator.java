@@ -54,7 +54,7 @@ public class Validator<T> implements Validatable<T> {
 		 * @param predicate validation rule
 		 * @return parent validator, configured for that rule
 		 */
-		public Validator<P> check(Predicate<F> predicate) {
+		public Validator<P> rule(Predicate<F> predicate) {
 			return parent.addRule(parentPredicate(predicate));
 		}
 
@@ -67,7 +67,7 @@ public class Validator<T> implements Validatable<T> {
 		 *                  Can be used with terminal operation {@link #listErrors(F)}
 		 * @return parent validator, configured for that rule
 		 */
-		public Validator<P> check(Predicate<F> predicate, String message) {
+		public Validator<P> rule(Predicate<F> predicate, String message) {
 			return parent.addRule(parentPredicate(predicate), message);
 		}
 
@@ -130,8 +130,8 @@ public class Validator<T> implements Validatable<T> {
 	 * @param predicate validation rule
 	 * @return validator, configured for that rule
 	 */
-	public Validator<T> check(Predicate<T> predicate) {
-		return map(new Self<>()).check(predicate);
+	public Validator<T> rule(Predicate<T> predicate) {
+		return map(new Self<>()).rule(predicate);
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class Validator<T> implements Validatable<T> {
 	 *                  Can be used with terminal operation {@link #listErrors(T)}
 	 * @return validator, configured for that rule
 	 */
-	public Validator<T> check(Predicate<T> predicate, String message) {
-		return map(new Self<>()).check(predicate, message);
+	public Validator<T> rule(Predicate<T> predicate, String message) {
+		return map(new Self<>()).rule(predicate, message);
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class Validator<T> implements Validatable<T> {
 	/**
 	 * List errors from all failed rule checks.
 	 * <br><br>
-	 * Error message can be specified calling {@link #check(Predicate, String)}.
+	 * Error message can be specified calling {@link #rule(Predicate, String)}.
 	 * Default message is {@value #DEFAULT_ERROR_MESSAGE}.
 	 * This is a terminal operation.
 	 *
