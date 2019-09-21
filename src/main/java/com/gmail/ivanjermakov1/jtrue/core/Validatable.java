@@ -5,7 +5,7 @@ import com.gmail.ivanjermakov1.jtrue.exception.InvalidObjectException;
 /**
  * Parent interface for all object validators
  *
- * @param <T> target object type
+ * @param <T> validated object type
  */
 @FunctionalInterface
 public interface Validatable<T> {

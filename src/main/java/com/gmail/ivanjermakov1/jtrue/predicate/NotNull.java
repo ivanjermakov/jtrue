@@ -2,11 +2,11 @@ package com.gmail.ivanjermakov1.jtrue.predicate;
 
 import java.util.function.Predicate;
 
-public class IsNull<T> implements Predicate<T> {
+public class NotNull<T> implements Predicate<T> {
 
 	@Override
 	public boolean test(T t) {
-		return t == null;
+		return !new Null<T>().test(t);
 	}
 
 }

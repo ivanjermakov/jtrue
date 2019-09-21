@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.function.Predicate;
 
-public class IsEmptyCollection<T> implements Predicate<Collection<? extends T>> {
+public class EmptyCollection<T> implements Predicate<Collection<? extends T>> {
 
 	@Override
 	public boolean test(@NotNull Collection<? extends T> t) {

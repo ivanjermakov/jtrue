@@ -1,26 +1,26 @@
 package com.gmail.ivanjermakov1.jtrue.unit.predicate;
 
-import com.gmail.ivanjermakov1.jtrue.predicate.IsEmptyString;
+import com.gmail.ivanjermakov1.jtrue.predicate.EmptyString;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class IsEmptyStringUnitTest {
+public class EmptyStringUnitTest {
 
 	@Test
 	public void shouldBeEmpty() {
-		assertTrue(new IsEmptyString().test(""));
+		assertTrue(new EmptyString().test(""));
 	}
 
 	@Test
 	public void shouldNotBeEmpty() {
-		assertFalse(new IsEmptyString().test("str"));
+		assertFalse(new EmptyString().test("str"));
 	}
 
 	@Test
 	public void shouldNotBeEmptyWithSpace() {
-		assertFalse(new IsEmptyString().test(" "));
+		assertFalse(new EmptyString().test(" "));
 	}
 
 }

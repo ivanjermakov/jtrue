@@ -1,21 +1,21 @@
 package com.gmail.ivanjermakov1.jtrue.unit.predicate;
 
-import com.gmail.ivanjermakov1.jtrue.predicate.IsNull;
+import com.gmail.ivanjermakov1.jtrue.predicate.Null;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class IsNullUnitTest {
+public class NullUnitTest {
 
 	@Test
 	public void shouldEqual() {
-		assertTrue(new IsNull<Integer>().test(null));
+		assertTrue(new Null<Integer>().test(null));
 	}
 
 	@Test
 	public void shouldNotEqual() {
-		assertFalse(new IsNull<Integer>().test(1));
+		assertFalse(new Null<Integer>().test(1));
 	}
 
 }

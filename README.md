@@ -29,11 +29,11 @@ dependencies {
         
 ### Hello world
 
-Let's check if given string is blank:
+Let's rule if given string is blank:
 
 ```java
 new Validator<String>()
-        .check(new IsBlank())
+        .rule(new Blank())
         .validate("Hello, World!");
 
 //output: true
@@ -45,14 +45,15 @@ JTrue features several base classes you can use:
 
 * `Validatable`: base interface for all validators
 * `Validator`: lazy functional-style implementation of `Validatable`
-* `Check`: smallest unit representing single validation check
-* `CompleteCheck`: `Check`, but tested on specific instance
+* `FieldValidator`: `Validator`, mapped to certain instance field
+* `Rule`: smallest unit representing single validation rule
+* `RuleResult`: `Rule`, but tested on specific instance
 
 All of them are located in `core` package.
 
 ### Predefined common-use predicates
 
-In Hello world example, line `new IsBlank()` may caught your eye. It is one of predefined predicates. All of them located in `predicate` package. There are such predicates like: `Equals`, `IsEmptyString`, `IsNull` and many more.
+In Hello world example, line `new Blank()` may caught your eye. It is one of predefined predicates. All of them located in `predicate` package. There are such predicates like: `Equals`, `EmptyString`, `Null` and many more.
 
 ## Bugs and feedback
 [GitHub issues](https://github.com/ivanjermakov/jtrue/issues)

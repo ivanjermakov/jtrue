@@ -7,7 +7,8 @@ import com.gmail.ivanjermakov1.jtrue.model.CustomException;
 import com.gmail.ivanjermakov1.jtrue.model.EmptyObject;
 import com.gmail.ivanjermakov1.jtrue.model.SimpleObject;
 import com.gmail.ivanjermakov1.jtrue.predicate.Equals;
-import com.gmail.ivanjermakov1.jtrue.predicate.IsNotNull;
+import com.gmail.ivanjermakov1.jtrue.predicate.NotNull;
+import com.gmail.ivanjermakov1.jtrue.predicate.Null;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ValidatorIntegrationTest {
 
@@ -59,10 +61,40 @@ public class ValidatorIntegrationTest {
 	@Test
 	public void shouldValidateSimpleObjectWithCheck() {
 		boolean isValid = new Validator<SimpleObject>()
-				.check(new IsNotNull<>())
+				.check(new NotNull<>())
 				.validate(simpleObject);
 
 		assertTrue(isValid);
+	}
+
+	@Test
+	public void shouldValidateSimpleObjectWithCheckAndMessage() {
+		boolean isValid = new Validator<SimpleObject>()
+				.check(new NotNull<>())
+				.validate(simpleObject);
+
+		assertTrue(isValid);
+	}
+
+	@Test
+	public void shouldListOneErrorWithCheck() {
+		List<String> errors = new Validator<SimpleObject>()
+				.check(new Null<>())
+				.listErrors(simpleObject);
+
+		assertEquals(1, errors.size());
+	}
+
+	@Test
+	public void shouldListOneErrorWithMessage() {
+		String message = "error message";
+
+		List<String> errors = new Validator<SimpleObject>()
+				.check(new Null<>(), message)
+				.listErrors(simpleObject);
+
+		assertEquals(1, errors.size());
+		assertEquals(message, errors.get(0));
 	}
 
 	@Test
@@ -97,6 +129,22 @@ public class ValidatorIntegrationTest {
 	}
 
 	@Test
+	public void shouldListError_WhenNotValidateSimpleObject() throws Throwable {
+		CustomException exception = new CustomException("custom message");
+
+		try {
+			new Validator<SimpleObject>()
+					.map(SimpleObject::getA).check(new Equals<>(2))
+					.throwing(() -> exception)
+					.throwInvalid(simpleObject);
+
+			fail();
+		} catch (CustomException e) {
+			assertEquals(exception.getMessage(), e.getMessage());
+		}
+	}
+
+	@Test
 	public void shouldNotThrowCustomException_WhenValidateSimpleObject() throws Throwable {
 		new Validator<SimpleObject>()
 				.map(SimpleObject::getA).check(new Equals<>(1))
@@ -124,7 +172,7 @@ public class ValidatorIntegrationTest {
 
 	@Test
 	public void shouldListErrorsEmpty() {
-		List<Throwable> errors = new Validator<SimpleObject>()
+		List<String> errors = new Validator<SimpleObject>()
 				.map(SimpleObject::getA).check(new Equals<>(1))
 				.listErrors(simpleObject);
 
@@ -133,7 +181,7 @@ public class ValidatorIntegrationTest {
 
 	@Test
 	public void shouldListOneDefaultError() {
-		List<Throwable> errors = new Validator<SimpleObject>()
+		List<String> errors = new Validator<SimpleObject>()
 				.map(SimpleObject::getA).check(new Equals<>(2))
 				.listErrors(simpleObject);
 
@@ -142,7 +190,7 @@ public class ValidatorIntegrationTest {
 
 	@Test
 	public void shouldListOneCustomError() {
-		List<Throwable> errors = new Validator<SimpleObject>()
+		List<String> errors = new Validator<SimpleObject>()
 				.map(SimpleObject::getA).check(new Equals<>(2), "custom error")
 				.listErrors(simpleObject);
 
