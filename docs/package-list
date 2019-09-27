@@ -1,4 +1,5 @@
-com.gmail.ivanjermakov1.jtrue.core
-com.gmail.ivanjermakov1.jtrue.exception
-com.gmail.ivanjermakov1.jtrue.function
-com.gmail.ivanjermakov1.jtrue.predicate
+com.github.ivanjermakov.jtrue.core
+com.github.ivanjermakov.jtrue.exception
+com.github.ivanjermakov.jtrue.function
+com.github.ivanjermakov.jtrue.predicate
+com.github.ivanjermakov.jtrue.util
