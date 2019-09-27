@@ -5,12 +5,10 @@ import java.util.function.Predicate;
 /**
  * Simple implementation of {@link Validatable} interface.
  * <br><br>
- * All it can do is to {@link #validate(T)} target object by given predicate and to throw exception when object is not
- * valid with {@link #throwInvalid(T)}.
+ * All it can do is to {@link #validate(T)} target object by given predicate
  *
  * @param <T> validated object type
  * @see #validate(T)
- * @see #throwInvalid(T)
  */
 public class SimpleValidator<T> implements Validatable<T> {
 

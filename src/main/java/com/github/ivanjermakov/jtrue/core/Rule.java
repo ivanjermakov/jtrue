@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  *
  * @param <T> validated object type
  */
-class Rule<T> {
+class Rule<T> implements Predicate<T> {
 
 	private final Predicate<T> predicate;
 	private final String message;
@@ -34,8 +34,8 @@ class Rule<T> {
 	 * @return rule result
 	 * @see RuleResult
 	 */
-	public RuleResult<T> test(T target) {
-		return new RuleResult<>(this, predicate.test(target));
+	public boolean test(T target) {
+		return predicate.test(target);
 	}
 
 	public Predicate<T> getPredicate() {
