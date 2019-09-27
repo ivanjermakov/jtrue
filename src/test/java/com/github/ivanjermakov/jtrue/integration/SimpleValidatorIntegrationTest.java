@@ -1,7 +1,6 @@
 package com.github.ivanjermakov.jtrue.integration;
 
 import com.github.ivanjermakov.jtrue.core.SimpleValidator;
-import com.github.ivanjermakov.jtrue.exception.InvalidObjectException;
 import com.github.ivanjermakov.jtrue.model.EmptyObject;
 import com.github.ivanjermakov.jtrue.predicate.False;
 import com.github.ivanjermakov.jtrue.predicate.True;
@@ -34,12 +33,6 @@ public class SimpleValidatorIntegrationTest {
 				.validate(emptyObject);
 
 		assertFalse(isValid);
-	}
-
-	@Test(expected = InvalidObjectException.class)
-	public void shouldThrowException_WhenNotValidateEmptyObject() throws Throwable {
-		new SimpleValidator<EmptyObject>(new False<>())
-				.throwInvalid(emptyObject);
 	}
 
 }

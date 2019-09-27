@@ -26,12 +26,14 @@ public class ValidatorIntegrationTest {
 	private EmptyObject emptyObject;
 	private SimpleObject simpleObject;
 	private ComplexObject complexObject;
+	private CustomException customException;
 
 	@Before
 	public void before() {
 		emptyObject = new EmptyObject();
 		simpleObject = new SimpleObject(1, 'b');
 		complexObject = new ComplexObject(1, simpleObject);
+		customException = new CustomException("custom message");
 	}
 
 	@Test
@@ -54,7 +56,7 @@ public class ValidatorIntegrationTest {
 	@Test
 	public void shouldValidateSimpleObjectMap() {
 		boolean isValid = new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(1))
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(1)))
 				.validate(simpleObject);
 
 		assertTrue(isValid);
@@ -102,43 +104,41 @@ public class ValidatorIntegrationTest {
 	@Test
 	public void shouldNotValidateSimpleObject() {
 		boolean isValid = new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(2))
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(2)))
 				.validate(simpleObject);
 
 		assertFalse(isValid);
 	}
 
 	@Test(expected = InvalidObjectException.class)
-	public void shouldThrowException_WhenNotValidateSimpleObject() throws Throwable {
+	public void shouldThrowException_WhenNotValidateSimpleObject() {
 		new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(2))
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(2)))
 				.throwInvalid(simpleObject);
 	}
 
 	@Test
-	public void shouldNotThrowException_WhenValidateSimpleObject() throws Throwable {
+	public void shouldNotThrowException_WhenValidateSimpleObject() {
 		new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(1))
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(1)))
 				.throwInvalid(simpleObject);
 	}
 
 	@Test(expected = CustomException.class)
-	public void shouldThrowCustomException_WhenNotValidateSimpleObject() throws Throwable {
+	public void shouldThrowCustomException_WhenNotValidateSimpleObject() throws CustomException {
 		new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(2))
-				.throwing(() -> new CustomException("custom message"))
-				.throwInvalid(simpleObject);
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(2)))
+				.throwInvalid(simpleObject, () -> customException);
 	}
 
 	@Test
-	public void shouldListError_WhenNotValidateSimpleObject() throws Throwable {
+	public void shouldListError_WhenNotValidateSimpleObject() {
 		CustomException exception = new CustomException("custom message");
 
 		try {
 			new Validator<SimpleObject>()
-					.map(SimpleObject::getA).rule(new Equals<>(2))
-					.throwing(() -> exception)
-					.throwInvalid(simpleObject);
+					.field(SimpleObject::getA, v -> v.rule(new Equals<>(2)))
+					.throwInvalid(simpleObject, () -> exception);
 
 			fail();
 		} catch (CustomException e) {
@@ -147,35 +147,24 @@ public class ValidatorIntegrationTest {
 	}
 
 	@Test
-	public void shouldNotThrowCustomException_WhenValidateSimpleObject() throws Throwable {
+	public void shouldNotThrowCustomException_WhenValidateSimpleObject() throws CustomException {
 		new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(1))
-				.throwing(() -> new CustomException("custom message"))
-				.throwInvalid(simpleObject);
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(1)))
+				.throwInvalid(simpleObject, () -> customException);
 	}
 
 	@Test
-	public void shouldValidateComplexObjectWithoutUse() {
+	public void shouldValidateComplexObject() {
 		new Validator<ComplexObject>()
-				.map(ComplexObject::getA).rule(new Equals<>(1))
-				.map(o -> o.getB().getB()).rule(new Equals<>('b'))
-				.validate(complexObject);
-	}
-
-	@Test
-	public void shouldValidateComplexObjectWithUse() {
-		new Validator<ComplexObject>()
-				.map(ComplexObject::getA).rule(new Equals<>(1))
-				.map(ComplexObject::getB)
-				.use(new Validator<SimpleObject>()
-						.map(SimpleObject::getB).rule(new Equals<>('b')))
+				.field(ComplexObject::getA, v -> v.rule(new Equals<>(1)))
+				.field(o -> o.getB().getB(), v -> v.rule(new Equals<>('b')))
 				.validate(complexObject);
 	}
 
 	@Test
 	public void shouldListErrorsEmpty() {
 		List<String> errors = new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(1))
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(1)))
 				.listErrors(simpleObject);
 
 		assertTrue(errors.isEmpty());
@@ -184,7 +173,7 @@ public class ValidatorIntegrationTest {
 	@Test
 	public void shouldListOneDefaultError() {
 		List<String> errors = new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(2))
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(2)))
 				.listErrors(simpleObject);
 
 		assertEquals(1, errors.size());
@@ -193,7 +182,7 @@ public class ValidatorIntegrationTest {
 	@Test
 	public void shouldListOneCustomError() {
 		List<String> errors = new Validator<SimpleObject>()
-				.map(SimpleObject::getA).rule(new Equals<>(2), "custom error")
+				.field(SimpleObject::getA, v -> v.rule(new Equals<>(2), "custom error"))
 				.listErrors(simpleObject);
 
 		assertEquals(1, errors.size());
@@ -203,10 +192,9 @@ public class ValidatorIntegrationTest {
 	public void shouldThrowCustomExceptionWithErrors() {
 		try {
 			new Validator<SimpleObject>()
-					.map(SimpleObject::getA).rule(new Equals<>(2), "custom error")
+					.field(SimpleObject::getA, v -> v.rule(new Equals<>(2), "custom error"))
 					.rule(new False<>(), "message1")
-					.throwing((Function<String, Throwable>) CustomException::new)
-					.throwInvalid(simpleObject);
+					.throwInvalid(simpleObject, (Function<String, Throwable>) CustomException::new);
 
 			fail();
 		} catch (CustomException e) {
@@ -214,6 +202,12 @@ public class ValidatorIntegrationTest {
 		} catch (Throwable throwable) {
 			fail();
 		}
+	}
+
+	@Test
+	public void shouldNotThrowCustomExceptionWithErrors() throws Throwable {
+		new Validator<SimpleObject>()
+				.throwInvalid(simpleObject, (Function<String, Throwable>) CustomException::new);
 	}
 
 }
