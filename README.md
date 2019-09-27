@@ -33,7 +33,7 @@ Let's rule if given string is blank:
 
 ```java
 new Validator<String>()
-        .rule(new Blank())
+        .rule(new NotBlank())
         .validate("Hello, World!");
 
 //output: true
@@ -45,8 +45,7 @@ JTrue features several base classes you can use:
 
 * `Validatable`: base interface for all validators
 * `Validator`: lazy functional-style implementation of `Validatable`
-* `FieldValidator`: `Validator`, mapped to certain instance field
-* `Rule`: smallest unit representing single validation rule
+* `Rule`: smallest unit representing single validation predicate
 * `RuleResult`: `Rule`, but tested on specific instance
 
 All of them are located in `core` package.
