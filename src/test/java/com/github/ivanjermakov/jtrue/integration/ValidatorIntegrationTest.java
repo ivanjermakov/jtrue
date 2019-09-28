@@ -192,15 +192,32 @@ public class ValidatorIntegrationTest {
 	public void shouldThrowCustomExceptionWithErrors() {
 		try {
 			new Validator<SimpleObject>()
-					.field(SimpleObject::getA, v -> v.rule(new Equals<>(2), "custom error"))
+					.field(SimpleObject::getA, v -> v
+							.rule(new Equals<>(2), "custom error"))
 					.rule(new False<>(), "message1")
-					.throwInvalid(simpleObject, (Function<String, Throwable>) CustomException::new);
+					.throwInvalid(simpleObject, (Function<String, CustomException>) CustomException::new);
 
 			fail();
 		} catch (CustomException e) {
-			assertEquals("custom error; message1", e.getMessage());
-		} catch (Throwable throwable) {
+			assertEquals("custom error, message1;", e.getMessage());
+		}
+	}
+
+	@Test
+	public void shouldThrowCustomExceptionWithErrors2() {
+		try {
+			new Validator<SimpleObject>()
+					.field(SimpleObject::getA, v -> v
+							.rule(new Equals<>(2), "invalid value")
+							.message(m -> "invalid field a: " + m)
+					)
+					.rule(new False<>(), "invalid object")
+					.message(m -> "invalid object: " + m)
+					.throwInvalid(simpleObject, (Function<String, CustomException>) CustomException::new);
+
 			fail();
+		} catch (CustomException e) {
+			assertEquals("invalid object: invalid field a: invalid value, invalid object;", e.getMessage());
 		}
 	}
 

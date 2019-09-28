@@ -24,20 +24,22 @@ import java.util.stream.Collectors;
 public class Validator<T> implements Validatable<T> {
 
 	private static final String DEFAULT_ERROR_MESSAGE = "invalid object";
-	private static final Supplier<InvalidObjectException> DEFAULT_ERROR = () -> new InvalidObjectException("invalid object");
+	private static final Function<String, InvalidObjectException> DEFAULT_ERROR = InvalidObjectException::new;
 
 	private final List<Rule<T>> rules;
+	private final Function<String, String> messageFunction;
 
 	/**
 	 * Instantiate new validator.
 	 * TODO: example
 	 */
 	public Validator() {
-		this(Collections.emptyList());
+		this(Collections.emptyList(), m -> m);
 	}
 
-	private Validator(List<Rule<T>> rules) {
+	private Validator(List<Rule<T>> rules, Function<String, String> messageFunction) {
 		this.rules = rules;
+		this.messageFunction = messageFunction;
 	}
 
 	/**
@@ -97,18 +99,21 @@ public class Validator<T> implements Validatable<T> {
 	 * @return {@link Validator}, configured to validate specified field
 	 */
 	public <F> Validator<T> field(@NotNull Function<T, F> mapFunction, @NotNull Function<Validator<F>, Validator<F>> validatorFunction) {
+		Validator<F> fieldValidator = validatorFunction.apply(new Validator<>());
+
 		return new Validator<>(
 				Lists.concat(
 						rules,
-						validatorFunction.apply(new Validator<>()).rules
+						fieldValidator.rules
 								.stream()
 								.map(r -> new Rule<T>(
 												t -> r.getPredicate().test(mapFunction.apply(t)),
-												r.getMessage()
+										fieldValidator.messageFunction.apply(r.getMessage())
 										)
 								)
 								.collect(Collectors.toList())
-				)
+				),
+				messageFunction
 		);
 	}
 
@@ -121,7 +126,7 @@ public class Validator<T> implements Validatable<T> {
 	 * @throws InvalidObjectException when target is invalid
 	 */
 	public void throwInvalid(T target) throws InvalidObjectException {
-		if (!validate(target)) throw DEFAULT_ERROR.get();
+		if (!validate(target)) throw DEFAULT_ERROR.apply(formatErrorList());
 	}
 
 	/**
@@ -170,6 +175,10 @@ public class Validator<T> implements Validatable<T> {
 				.collect(Collectors.toList());
 	}
 
+	public Validator<T> message(Function<String, String> messageFunction) {
+		return new Validator<>(rules, messageFunction);
+	}
+
 	private Validator<T> addRule(Predicate<T> predicate) {
 		return addRule(predicate, DEFAULT_ERROR_MESSAGE);
 	}
@@ -179,15 +188,18 @@ public class Validator<T> implements Validatable<T> {
 				Lists.concat(
 						rules,
 						Collections.singletonList(new Rule<>(predicate, message))
-				)
+				),
+				messageFunction
 		);
 	}
 
 	private String formatErrorList() {
-		return rules
+		return messageFunction.apply(rules
 				.stream()
 				.map(Rule::getMessage)
-				.collect(Collectors.joining("; "));
+				.collect(Collectors.joining(", "))
+				.concat(";")
+		);
 	}
 
 }
