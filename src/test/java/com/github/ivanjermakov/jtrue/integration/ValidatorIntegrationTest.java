@@ -10,6 +10,7 @@ import com.github.ivanjermakov.jtrue.predicate.Equals;
 import com.github.ivanjermakov.jtrue.predicate.False;
 import com.github.ivanjermakov.jtrue.predicate.NotNull;
 import com.github.ivanjermakov.jtrue.predicate.Null;
+import com.github.ivanjermakov.jtrue.predicate.True;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -199,7 +200,7 @@ public class ValidatorIntegrationTest {
 
 			fail();
 		} catch (CustomException e) {
-			assertEquals("custom error, message1;", e.getMessage());
+			assertEquals("invalid object: custom error, message1;", e.getMessage());
 		}
 	}
 
@@ -212,7 +213,6 @@ public class ValidatorIntegrationTest {
 							.message(m -> "invalid field a: " + m)
 					)
 					.rule(new False<>(), "invalid object")
-					.message(m -> "invalid object: " + m)
 					.throwInvalid(simpleObject, (Function<String, CustomException>) CustomException::new);
 
 			fail();
@@ -225,6 +225,21 @@ public class ValidatorIntegrationTest {
 	public void shouldNotThrowCustomExceptionWithErrors() throws Throwable {
 		new Validator<SimpleObject>()
 				.throwInvalid(simpleObject, (Function<String, Throwable>) CustomException::new);
+	}
+
+	@Test
+	public void shouldNotValidateWithNPEInMap() {
+		ComplexObject complexObject = new ComplexObject(null, null);
+		Validator<ComplexObject> validator = new Validator<ComplexObject>()
+				.field(o -> o.getB().getA(), v -> v
+						.rule(new True<>()));
+
+		boolean isValid = validator
+				.validate(complexObject);
+
+		assertFalse(isValid);
+
+		System.out.println(String.join("\n", validator.listErrors(complexObject)));
 	}
 
 }
