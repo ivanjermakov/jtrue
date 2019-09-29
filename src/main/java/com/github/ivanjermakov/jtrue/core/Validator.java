@@ -23,8 +23,9 @@ import java.util.stream.Collectors;
  */
 public class Validator<T> implements Validatable<T> {
 
-	private static final String DEFAULT_ERROR_MESSAGE = "invalid object";
+	private static final String DEFAULT_MESSAGE = "invalid object";
 	private static final Function<String, InvalidObjectException> DEFAULT_ERROR = InvalidObjectException::new;
+	private static final Function<String, String> DEFAULT_MESSAGE_FUNCTION = m -> DEFAULT_MESSAGE + ": " + m;
 
 	private final List<Rule<T>> rules;
 	private final Function<String, String> messageFunction;
@@ -34,7 +35,7 @@ public class Validator<T> implements Validatable<T> {
 	 * TODO: example
 	 */
 	public Validator() {
-		this(Collections.emptyList(), m -> m);
+		this(Collections.emptyList(), DEFAULT_MESSAGE_FUNCTION);
 	}
 
 	private Validator(List<Rule<T>> rules, Function<String, String> messageFunction) {
@@ -55,7 +56,7 @@ public class Validator<T> implements Validatable<T> {
 	public boolean validate(T target) {
 		return rules
 				.stream()
-				.map(c -> c.test(target))
+				.map(r -> r.test(target))
 				.reduce(true, new And());
 	}
 
@@ -99,8 +100,7 @@ public class Validator<T> implements Validatable<T> {
 	 * @return {@link Validator}, configured to validate specified field
 	 */
 	public <F> Validator<T> field(@NotNull Function<T, F> mapFunction, @NotNull Function<Validator<F>, Validator<F>> validatorFunction) {
-//		TODO: deal with NPE in mapFunction
-		Validator<F> fieldValidator = validatorFunction.apply(new Validator<>());
+		Validator<F> fieldValidator = validatorFunction.apply(new Validator<F>().message(m -> m));
 
 		return new Validator<>(
 				Lists.concat(
@@ -119,7 +119,7 @@ public class Validator<T> implements Validatable<T> {
 	}
 
 	/**
-	 * Throws {@link InvalidObjectException} with default error message: {@value DEFAULT_ERROR_MESSAGE}, when target is invalid.
+	 * Throws {@link InvalidObjectException} with default error message: {@value DEFAULT_MESSAGE}, when target is invalid.
 	 * <br><br>
 	 * This is a terminal operation.
 	 *
@@ -161,7 +161,7 @@ public class Validator<T> implements Validatable<T> {
 	 * List errors from all failed rule checks.
 	 * <br><br>
 	 * Error message can be specified calling {@link #rule(Predicate, String)}.
-	 * Default message is {@value #DEFAULT_ERROR_MESSAGE}.
+	 * Default message is {@value #DEFAULT_MESSAGE}.
 	 * This is a terminal operation.
 	 *
 	 * @param target verification target object
@@ -181,7 +181,7 @@ public class Validator<T> implements Validatable<T> {
 	}
 
 	private Validator<T> addRule(Predicate<T> predicate) {
-		return addRule(predicate, DEFAULT_ERROR_MESSAGE);
+		return addRule(predicate, DEFAULT_MESSAGE);
 	}
 
 	private Validator<T> addRule(Predicate<T> predicate, String message) {

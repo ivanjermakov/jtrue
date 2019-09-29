@@ -13,11 +13,13 @@ import java.util.function.Predicate;
  */
 class Rule<T> implements Predicate<T> {
 
+	private static final String TESTING_ERROR = "exception happened during mapping or testing target field";
+
 	private final Predicate<T> predicate;
-	private final String message;
+	private String message;
 
 	/**
-	 * Create new rule instance
+	 * Create new rule instance.
 	 *
 	 * @param predicate given verification predicate
 	 * @param message   error message in case of failed invalid object
@@ -28,14 +30,20 @@ class Rule<T> implements Predicate<T> {
 	}
 
 	/**
-	 * Apply {@link #predicate} to the specified target object
+	 * Apply {@link #predicate} to the specified target object.
+	 * If any error happens during testing, false result is returned.
 	 *
 	 * @param target target object
 	 * @return rule result
 	 * @see RuleResult
 	 */
 	public boolean test(T target) {
-		return predicate.test(target);
+		try {
+			return predicate.test(target);
+		} catch (Throwable t) {
+			message = TESTING_ERROR + ": " + t;
+			return false;
+		}
 	}
 
 	public Predicate<T> getPredicate() {
