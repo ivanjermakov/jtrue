@@ -99,6 +99,7 @@ public class Validator<T> implements Validatable<T> {
 	 * @return {@link Validator}, configured to validate specified field
 	 */
 	public <F> Validator<T> field(@NotNull Function<T, F> mapFunction, @NotNull Function<Validator<F>, Validator<F>> validatorFunction) {
+//		TODO: deal with NPE in mapFunction
 		Validator<F> fieldValidator = validatorFunction.apply(new Validator<>());
 
 		return new Validator<>(
