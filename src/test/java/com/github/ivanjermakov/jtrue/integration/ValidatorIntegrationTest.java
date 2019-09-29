@@ -2,6 +2,7 @@ package com.github.ivanjermakov.jtrue.integration;
 
 import com.github.ivanjermakov.jtrue.core.Validator;
 import com.github.ivanjermakov.jtrue.exception.InvalidObjectException;
+import com.github.ivanjermakov.jtrue.function.Self;
 import com.github.ivanjermakov.jtrue.model.ComplexObject;
 import com.github.ivanjermakov.jtrue.model.CustomException;
 import com.github.ivanjermakov.jtrue.model.EmptyObject;
@@ -230,16 +231,25 @@ public class ValidatorIntegrationTest {
 	@Test
 	public void shouldNotValidateWithNPEInMap() {
 		ComplexObject complexObject = new ComplexObject(null, null);
-		Validator<ComplexObject> validator = new Validator<ComplexObject>()
-				.field(o -> o.getB().getA(), v -> v
-						.rule(new True<>()));
 
-		boolean isValid = validator
+		boolean isValid = new Validator<ComplexObject>()
+				.field(o -> o.getB().getA(), v -> v
+						.rule(new True<>()))
 				.validate(complexObject);
 
 		assertFalse(isValid);
+	}
 
-		System.out.println(String.join("\n", validator.listErrors(complexObject)));
+	@Test
+	public void shouldNotValidateWithNPEInTest() {
+		ComplexObject complexObject = new ComplexObject(null, null);
+
+		boolean isValid = new Validator<ComplexObject>()
+				.field(new Self<>(), v -> v
+						.rule(o -> new True<>().test(o.getB().getA())))
+				.validate(complexObject);
+
+		assertFalse(isValid);
 	}
 
 }
