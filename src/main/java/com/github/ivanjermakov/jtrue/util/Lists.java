@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 public class Lists {
 
-	public static <T> List<T> concat(List<T> c1, List<T> c2) {
+	public static <T> List<T> concat(List<? extends T> c1, List<? extends T> c2) {
 		return Stream
 				.concat(
 						c1.stream(),
