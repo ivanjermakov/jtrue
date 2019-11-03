@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class OvlFileParser {
 
@@ -24,7 +24,7 @@ public class OvlFileParser {
 		URL resource = OvlParser.class.getResource(path);
 		if (resource == null) throw new IOException("resource \"" + path + "\" not found");
 
-		return ovlParser.parse(Files.readString(Path.of(resource.toURI())));
+		return ovlParser.parse(Files.readString(Paths.get(resource.toURI())));
 	}
 
 }
