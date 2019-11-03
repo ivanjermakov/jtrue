@@ -24,7 +24,7 @@ public class OvlFileParser {
 		URL resource = OvlParser.class.getResource(path);
 		if (resource == null) throw new IOException("resource \"" + path + "\" not found");
 
-		return ovlParser.parse(Files.readString(Paths.get(resource.toURI())));
+		return ovlParser.parse(String.join(System.lineSeparator(), Files.readAllLines(Paths.get(resource.toURI()))));
 	}
 
 }
