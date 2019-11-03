@@ -1,0 +1,10 @@
+&(
+    Predicate1,
+    .a &(
+        Predicate2,
+        Predicate3,
+    ),
+    .b &(
+        Predicate4,
+    )
+)

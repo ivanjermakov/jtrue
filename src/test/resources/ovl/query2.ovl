@@ -1,0 +1,16 @@
+|(
+    &(
+        *(.forwarded, .images, .documents) &(
+            NotNull
+        ),
+        ?(.forwarded, .images, .documents) &(
+            NotEmptyCollection
+        )
+    ),
+    &(
+        .text &(
+            NotNull,
+            NotBlank
+        )
+    )
+)

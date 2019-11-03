@@ -1,0 +1,20 @@
+|(
+    &(
+        *(.a.b, .b.c) &(
+            Predicate1
+        ),
+        *(.a) &(
+            Predicate2
+        )
+    ),
+    &(
+        . |(
+            NotNull,
+            NotBlank,
+            .b.c |(
+                Predicate3,
+                Predicate4
+            )
+        )
+    )
+)
