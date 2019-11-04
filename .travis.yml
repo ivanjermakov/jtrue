@@ -14,4 +14,4 @@ cache:
 script:
   - gradle test
 after_success:
-  - gradle jacocoTestReport coveralls
+  - gradle jacocoTestReport coveralls -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
