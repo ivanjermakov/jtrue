@@ -1,6 +1,5 @@
 package com.github.ivanjermakov.jtrue.lang;
 
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,7 @@ public class LangFileParser {
 		this.langParser = langParser;
 	}
 
-	public ParseTree parse(String path) throws IOException, URISyntaxException {
+	public SyntaxAnalyzer parse(String path) throws IOException, URISyntaxException {
 		URL resource = LangParser.class.getResource(path);
 		if (resource == null) throw new IOException("resource \"" + path + "\" not found");
 

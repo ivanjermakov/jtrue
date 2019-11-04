@@ -1,30 +1,29 @@
 package com.github.ivanjermakov.jtrue.lang;
 
+import com.github.ivanjermakov.antlr.JtrueLexer;
+import com.github.ivanjermakov.antlr.JtrueParser;
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class LangParser {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LangParser.class);
 
-	public ParseTree parse(String source) throws IOException {
+	public SyntaxAnalyzer parse(String source) throws IOException {
 		LOG.debug("parse source code: {}", source);
 
-		InputStream inputStream = new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8));
-		Lexer lexer = new com.github.ivanjermakov.jtrue.lang.jtrueLexer(CharStreams.fromStream(inputStream));
-		TokenStream tokenStream = new CommonTokenStream(lexer);
-		com.github.ivanjermakov.jtrue.lang.jtrueParser parser = new com.github.ivanjermakov.jtrue.lang.jtrueParser(tokenStream);
-		ParseTree tree = parser.object();
+		var inputStream = new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8));
+		var lexer = new JtrueLexer(CharStreams.fromStream(inputStream));
+		var tokenStream = new CommonTokenStream(lexer);
+		var parser = new JtrueParser(tokenStream);
+		var tree = parser.object();
 
 		LOG.debug("parsed source code successfully");
 		LOG.debug("parse tree: {}", tree.toStringTree(parser));
@@ -39,7 +38,12 @@ public class LangParser {
 			e.printStackTrace();
 		}*/
 
-		return tree;
+		return new SyntaxAnalyzer(
+				lexer,
+				parser,
+				new BaseErrorListener(),
+				tree
+		);
 	}
 
 }
