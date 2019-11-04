@@ -1,0 +1,14 @@
+# head comment
+&(
+    #
+    # between comment
+#   line start comment
+    Predicate1,
+    ## multiple identifiers
+    # element between comment
+    .a &(
+        Predicate2, # append line comment
+        Predicate3
+        #
+    ),
+)

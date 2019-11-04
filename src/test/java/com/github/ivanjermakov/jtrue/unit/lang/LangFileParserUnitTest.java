@@ -14,7 +14,7 @@ public class LangFileParserUnitTest {
 
 	@Test
 	public void shouldParseQuery1() throws IOException, URISyntaxException {
-		ParseTree parse = new LangFileParser(new LangParser()).parse("/lang/query1.true");
+		ParseTree parse = new LangFileParser(new LangParser()).parse("/lang/query1.true").root;
 		assertNotNull(parse);
 	}
 
