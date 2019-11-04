@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.ovl;
+package com.github.ivanjermakov.jtrue.lang;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -13,20 +13,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class OvlParser {
+public class LangParser {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OvlParser.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LangParser.class);
 
 	public ParseTree parse(String source) throws IOException {
-		LOG.debug("parse ovl source code: {}", source);
+		LOG.debug("parse source code: {}", source);
 
 		InputStream inputStream = new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8));
-		Lexer lexer = new com.github.ivanjermakov.jtrue.ovl.ovlLexer(CharStreams.fromStream(inputStream));
+		Lexer lexer = new com.github.ivanjermakov.jtrue.lang.jtrueLexer(CharStreams.fromStream(inputStream));
 		TokenStream tokenStream = new CommonTokenStream(lexer);
-		com.github.ivanjermakov.jtrue.ovl.ovlParser parser = new com.github.ivanjermakov.jtrue.ovl.ovlParser(tokenStream);
+		com.github.ivanjermakov.jtrue.lang.jtrueParser parser = new com.github.ivanjermakov.jtrue.lang.jtrueParser(tokenStream);
 		ParseTree tree = parser.object();
 
-		LOG.debug("parsed ovl source code successfully");
+		LOG.debug("parsed source code successfully");
 		LOG.debug("parse tree: {}", tree.toStringTree(parser));
 
 //		TODO: move somewhere

@@ -1,7 +1,7 @@
-package com.github.ivanjermakov.jtrue.unit.ovl;
+package com.github.ivanjermakov.jtrue.unit.lang;
 
-import com.github.ivanjermakov.jtrue.ovl.OvlFileParser;
-import com.github.ivanjermakov.jtrue.ovl.OvlParser;
+import com.github.ivanjermakov.jtrue.lang.LangFileParser;
+import com.github.ivanjermakov.jtrue.lang.LangParser;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Test;
 
@@ -10,17 +10,17 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertNotNull;
 
-public class OvlFileParserUnitTest {
+public class LangFileParserUnitTest {
 
 	@Test
 	public void shouldParseQuery1() throws IOException, URISyntaxException {
-		ParseTree parse = new OvlFileParser(new OvlParser()).parse("/ovl/query1.ovl");
+		ParseTree parse = new LangFileParser(new LangParser()).parse("/lang/query1.true");
 		assertNotNull(parse);
 	}
 
 	@Test(expected = IOException.class)
 	public void shouldThrowException_WhenFileNotFound() throws IOException, URISyntaxException {
-		new OvlFileParser(new OvlParser()).parse("/ovl/wrong_filename.abc");
+		new LangFileParser(new LangParser()).parse("/lang/wrong_filename.abc");
 	}
 
 }

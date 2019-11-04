@@ -1,7 +1,7 @@
-grammar ovl;
+grammar jtrue;
 
 @header {
-    package com.github.ivanjermakov.jtrue.ovl;
+    package com.github.ivanjermakov.jtrue.lang;
 }
 
 object
