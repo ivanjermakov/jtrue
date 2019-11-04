@@ -28,8 +28,7 @@ jacocoTestReport {
 }
 
 coveralls {
-    saveAsFile = true
-    sendToCoveralls = false
+    jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
 }
 
 dependencies {
