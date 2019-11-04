@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.unit;
+package com.github.ivanjermakov.jtrue.unit.exception;
 
 import com.github.ivanjermakov.jtrue.exception.InvalidObjectException;
 import org.junit.Test;
