@@ -99,7 +99,7 @@ num
     ;
 
 str
-    : QUOTE WORD? QUOTE
+    : QUOTE .*? QUOTE
     ;
 
 bool

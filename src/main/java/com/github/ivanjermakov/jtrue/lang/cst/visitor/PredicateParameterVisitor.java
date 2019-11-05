@@ -3,9 +3,11 @@ package com.github.ivanjermakov.jtrue.lang.cst.visitor;
 import com.github.ivanjermakov.antlr.JtrueParser;
 import com.github.ivanjermakov.jtrue.exception.SyntaxException;
 import com.github.ivanjermakov.jtrue.lang.type.LangType;
+import com.github.ivanjermakov.jtrue.lang.type.Str;
 import com.github.ivanjermakov.jtrue.lang.type.parse.BoolParser;
 import com.github.ivanjermakov.jtrue.lang.type.parse.NumParser;
 import com.github.ivanjermakov.jtrue.lang.type.parse.StrParser;
+import org.antlr.v4.runtime.misc.Interval;
 
 public class PredicateParameterVisitor implements LangVisitor<LangType> {
 
@@ -21,16 +23,27 @@ public class PredicateParameterVisitor implements LangVisitor<LangType> {
 			return new NumParser().parse(predicateParameter.num().getText());
 		}
 		if (predicateParameter.str() != null) {
-			if (predicateParameter.str().children.size() == 3) {
-				return new StrParser().parse(predicateParameter.str().getChild(1).getText());
-			}
-			throw new SyntaxException("'srt' node must contain 'QUOTE', 'WORD' and 'QUOTE' nodes");
+			String string = new StrParser().parse(getFullText(predicateParameter.str())).text;
+			return new Str(string.substring(1, string.length() - 1));
 		}
 		if (predicateParameter.bool() != null) {
 			return new BoolParser().parse(predicateParameter.bool().getText());
 		}
 
 		throw new SyntaxException("'predicateParameter' node must contain 'num' node");
+	}
+
+	/**
+	 * Guide: https://stackoverflow.com/a/26533266/8662097
+	 *
+	 * @param str
+	 * @return
+	 */
+	private String getFullText(JtrueParser.StrContext str) {
+		if (str.start == null || str.stop == null || str.start.getStartIndex() < 0 || str.stop.getStopIndex() < 0)
+			return str.getText();
+
+		return str.start.getInputStream().getText(Interval.of(str.start.getStartIndex(), str.stop.getStopIndex()));
 	}
 
 }
