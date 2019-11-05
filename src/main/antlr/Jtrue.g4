@@ -19,7 +19,8 @@ group
     ;
 
 and_group
-    : AND_OP OP validation_rules CP
+    : OP validation_rules CP
+    | AND_OP OP validation_rules CP
     ;
 
 or_group
@@ -67,6 +68,17 @@ field_path
 //    named predicates only for now
 predicate
     : WORD
+    | WORD OP CP
+    | WORD OP predicate_parameters CP
+    ;
+
+predicate_parameters
+    : predicate_parameter (COMMA predicate_parameter)* COMMA?
+    ;
+
+predicate_parameter
+    : NUM
+    | STRING
     ;
 
 COMMENT
@@ -89,6 +101,10 @@ CP
     : ')'
     ;
 
+DC
+    : '"'
+    ;
+
 NOT_OP
     : '!'
     ;
@@ -108,6 +124,14 @@ ALL_OP
 
 ANY_OP
     : '?'
+    ;
+
+NUM
+    : [-+]? [0-9]+ (DOT [0-9]+)?
+    ;
+
+STRING
+    : DC WORD? DC
     ;
 
 WORD
