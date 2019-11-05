@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.lang;
+package com.github.ivanjermakov.jtrue.lang.ast;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.core;
+package com.github.ivanjermakov.jtrue.validator;
 
 import com.github.ivanjermakov.jtrue.exception.InvalidObjectException;
 import com.github.ivanjermakov.jtrue.function.And;
@@ -22,6 +22,92 @@ import java.util.stream.Collectors;
  * @param <T> validated object type
  */
 public class Validator<T> implements Validatable<T> {
+
+	/**
+	 * Single rule of object verification process.
+	 * <br><br>
+	 * It do nothing by itself, because {@link Validator} is lazy-evaluated.
+	 * {@link Validator} use it's predicate to verify this rule when executing one of Validator's terminal operations.
+	 * After verifying this rule, calling {@link #test(T)} method, it returns instance of Verified rule, called {@link RuleResult}
+	 *
+	 * @param <T> validated object type
+	 */
+	public static class Rule<T> implements Predicate<T> {
+
+		private static final String TESTING_ERROR = "exception happened during mapping or testing target field";
+
+		private final Predicate<T> predicate;
+		private String message;
+
+		/**
+		 * Create new rule instance.
+		 *
+		 * @param predicate given verification predicate
+		 * @param message   error message in case of failed invalid object
+		 */
+		public Rule(Predicate<T> predicate, String message) {
+			this.predicate = predicate;
+			this.message = message;
+		}
+
+		/**
+		 * Apply {@link #predicate} to the specified target object.
+		 * If any error happens during testing, false result is returned.
+		 *
+		 * @param target target object
+		 * @return rule result
+		 * @see RuleResult
+		 */
+		public boolean test(T target) {
+			try {
+				return predicate.test(target);
+			} catch (Throwable t) {
+				message = TESTING_ERROR + ": " + t;
+				return false;
+			}
+		}
+
+		public Predicate<T> getPredicate() {
+			return predicate;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+	}
+
+	/**
+	 * Describes verified {@link Rule} instance.
+	 *
+	 * @param <T> validated object type
+	 * @see Rule
+	 */
+	public static class RuleResult<T> {
+
+		private final Rule<T> rule;
+		private final boolean result;
+
+		/**
+		 * Create new instance
+		 *
+		 * @param rule   verification rule
+		 * @param result result of rule verification
+		 */
+		public RuleResult(Rule<T> rule, boolean result) {
+			this.rule = rule;
+			this.result = result;
+		}
+
+		public Rule<T> getRule() {
+			return rule;
+		}
+
+		public boolean getResult() {
+			return result;
+		}
+
+	}
 
 	private static final String DEFAULT_MESSAGE = "invalid object";
 	private static final Function<String, InvalidObjectException> DEFAULT_ERROR = InvalidObjectException::new;

@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.core;
+package com.github.ivanjermakov.jtrue.validator;
 
 import java.util.function.Predicate;
 

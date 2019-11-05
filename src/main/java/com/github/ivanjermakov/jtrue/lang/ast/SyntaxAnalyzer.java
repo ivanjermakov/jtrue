@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.lang;
+package com.github.ivanjermakov.jtrue.lang.ast;
 
 import com.github.ivanjermakov.antlr.JtrueLexer;
 import com.github.ivanjermakov.antlr.JtrueParser;

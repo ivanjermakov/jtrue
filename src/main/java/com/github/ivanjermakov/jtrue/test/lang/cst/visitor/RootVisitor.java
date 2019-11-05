@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.unit.lang.visitor;
+package com.github.ivanjermakov.jtrue.test.lang.cst.visitor;
 
 import com.github.ivanjermakov.antlr.JtrueParser;
 
