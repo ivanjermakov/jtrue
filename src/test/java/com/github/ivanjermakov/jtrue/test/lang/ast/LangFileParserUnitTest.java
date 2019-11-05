@@ -1,7 +1,7 @@
-package com.github.ivanjermakov.jtrue.unit.lang;
+package com.github.ivanjermakov.jtrue.test.lang.ast;
 
-import com.github.ivanjermakov.jtrue.lang.LangFileParser;
-import com.github.ivanjermakov.jtrue.lang.LangParser;
+import com.github.ivanjermakov.jtrue.lang.ast.LangFileParser;
+import com.github.ivanjermakov.jtrue.lang.ast.LangParser;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Test;
 

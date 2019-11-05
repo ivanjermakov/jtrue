@@ -1,9 +1,9 @@
-package com.github.ivanjermakov.jtrue.integration;
+package com.github.ivanjermakov.jtrue.test.validator;
 
-import com.github.ivanjermakov.jtrue.core.SimpleValidator;
 import com.github.ivanjermakov.jtrue.model.EmptyObject;
 import com.github.ivanjermakov.jtrue.predicate.False;
 import com.github.ivanjermakov.jtrue.predicate.True;
+import com.github.ivanjermakov.jtrue.validator.SimpleValidator;
 import org.junit.Before;
 import org.junit.Test;
 

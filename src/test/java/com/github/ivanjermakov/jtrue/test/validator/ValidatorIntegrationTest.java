@@ -1,6 +1,5 @@
-package com.github.ivanjermakov.jtrue.integration;
+package com.github.ivanjermakov.jtrue.test.validator;
 
-import com.github.ivanjermakov.jtrue.core.Validator;
 import com.github.ivanjermakov.jtrue.exception.InvalidObjectException;
 import com.github.ivanjermakov.jtrue.function.Self;
 import com.github.ivanjermakov.jtrue.model.ComplexObject;
@@ -12,6 +11,7 @@ import com.github.ivanjermakov.jtrue.predicate.False;
 import com.github.ivanjermakov.jtrue.predicate.NotNull;
 import com.github.ivanjermakov.jtrue.predicate.Null;
 import com.github.ivanjermakov.jtrue.predicate.True;
+import com.github.ivanjermakov.jtrue.validator.Validator;
 import org.junit.Before;
 import org.junit.Test;
 

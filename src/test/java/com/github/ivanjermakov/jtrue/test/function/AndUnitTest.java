@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.unit.function;
+package com.github.ivanjermakov.jtrue.test.function;
 
 import com.github.ivanjermakov.jtrue.function.And;
 import org.junit.Test;

@@ -1,7 +1,7 @@
-package com.github.ivanjermakov.jtrue.unit.lang;
+package com.github.ivanjermakov.jtrue.test.lang.ast;
 
-import com.github.ivanjermakov.jtrue.lang.LangParser;
-import com.github.ivanjermakov.jtrue.lang.SyntaxAnalyzer;
+import com.github.ivanjermakov.jtrue.lang.ast.LangParser;
+import com.github.ivanjermakov.jtrue.lang.ast.SyntaxAnalyzer;
 import org.junit.Test;
 
 import java.io.IOException;

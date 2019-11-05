@@ -1,4 +1,4 @@
-package com.github.ivanjermakov.jtrue.unit.predicate;
+package com.github.ivanjermakov.jtrue.test.predicate;
 
 import com.github.ivanjermakov.jtrue.predicate.NotBlank;
 import org.junit.Test;

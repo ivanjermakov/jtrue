@@ -1,6 +1,6 @@
 package com.github.ivanjermakov.jtrue.util;
 
-import com.github.ivanjermakov.jtrue.lang.LangParser;
+import com.github.ivanjermakov.jtrue.lang.ast.LangParser;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
