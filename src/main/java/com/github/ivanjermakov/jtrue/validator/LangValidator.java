@@ -17,6 +17,8 @@ import java.util.Map;
 public class LangValidator<T> implements Validatable<T> {
 
 	private final String source;
+	//	TODO: better system to include predicates into validator
+	//	TODO: predefined predicates
 	private final Map<String, ValidationPredicate> predicateMap;
 
 	public LangValidator(String source, Map<String, ValidationPredicate> predicateMap) {
