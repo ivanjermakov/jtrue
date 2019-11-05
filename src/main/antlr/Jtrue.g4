@@ -14,71 +14,95 @@ negate
     ;
 
 group
-    : and_group
-    | or_group
+    : andGroup
+    | orGroup
     ;
 
-and_group
-    : OP validation_rules CP
-    | AND_OP OP validation_rules CP
+andGroup
+    : OP validationRules CP
+    | AND_OP OP validationRules CP
     ;
 
-or_group
-    : OR_OP OP validation_rules CP
+orGroup
+    : OR_OP OP validationRules CP
     ;
 
-validation_rules
-    : validation_rule (COMMA validation_rule)* COMMA?
+validationRules
+    : validationRule (COMMA validationRule)* COMMA?
     ;
 
-validation_rule
-    : predicate
+validationRule
+    : predicate errorMessage?
     | group
-    | field_rule
+    | fieldRule
     ;
 
-field_rule
-    : field_selector object
+errorMessage
+    : ARROW str
     ;
 
-field_selector
-    : single_field_selector
-    | all_selector
-    | any_selector
+fieldRule
+    : fieldSelector object
     ;
 
-single_field_selector
-    : field_path
+fieldSelector
+    : singleFieldSelector
+    | allFieldSelector
+    | anyFieldSelector
     ;
 
-all_selector
-    : ALL_OP OP field_path (COMMA field_path)* CP
+singleFieldSelector
+    : fieldPath
     ;
 
-any_selector
-    : ANY_OP OP field_path (COMMA field_path)* CP
+allFieldSelector
+    : ALL_OP OP fieldPaths CP
     ;
 
-field_path
+anyFieldSelector
+    : ANY_OP OP fieldPaths CP
+    ;
+
+fieldPaths
+    : fieldPath (COMMA fieldPath)*
+    ;
+
+fieldPath
     : DOT
-    | DOT WORD
     | (DOT WORD)+
     ;
 
 //    named predicates only for now
 predicate
+    : predicateName
+    | predicateName OP CP
+    | predicateName OP predicateParameters CP
+    ;
+
+predicateName
     : WORD
-    | WORD OP CP
-    | WORD OP predicate_parameters CP
     ;
 
-predicate_parameters
-    : predicate_parameter (COMMA predicate_parameter)* COMMA?
+predicateParameters
+    : predicateParameter (COMMA predicateParameter)* COMMA?
     ;
 
-predicate_parameter
-    : NUM
-    | STRING
+predicateParameter
+    : num
+    | str
+    | bool
+    ;
+
+num
+    : NUMBER
+    ;
+
+str
+    : QUOTE WORD? QUOTE
+    ;
+
+bool
+    : (TRUE | FALSE)
     ;
 
 COMMENT
@@ -101,8 +125,8 @@ CP
     : ')'
     ;
 
-DC
-    : '"'
+QUOTE
+    : '\''
     ;
 
 NOT_OP
@@ -126,12 +150,20 @@ ANY_OP
     : '?'
     ;
 
-NUM
-    : [-+]? [0-9]+ (DOT [0-9]+)?
+ARROW
+    : '->'
     ;
 
-STRING
-    : DC WORD? DC
+TRUE
+    : 'true'
+    ;
+
+FALSE
+    : 'false'
+    ;
+
+NUMBER
+    : [-+]? [0-9]+ (DOT [0-9]+)?
     ;
 
 WORD
