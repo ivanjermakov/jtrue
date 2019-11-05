@@ -16,8 +16,8 @@ public class FieldPathVisitor implements LangVisitor<FieldPath> {
 
 	@Override
 	public FieldPath visit() {
-		List<String> fieldNames = Arrays.asList(fieldPath.getText().substring(1).split("\\."));
-		return new FieldPath(fieldNames.subList(1, fieldNames.size()));
+		List<String> fieldNames = Arrays.asList(fieldPath.getText().split("\\."));
+		return new FieldPath(fieldNames.subList(fieldNames.isEmpty() ? 0 : 1, fieldNames.size()));
 	}
 
 }
