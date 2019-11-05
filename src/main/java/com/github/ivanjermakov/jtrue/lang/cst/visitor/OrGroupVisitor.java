@@ -26,7 +26,7 @@ public class OrGroupVisitor<T> implements LangVisitor<ValidationResult> {
 
 			boolean isValid = results
 					.stream()
-					.noneMatch(r -> r.isValid);
+					.anyMatch(r -> r.isValid);
 
 			ValidationError error = new ValidationError(
 					results
