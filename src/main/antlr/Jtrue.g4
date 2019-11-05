@@ -27,6 +27,7 @@ orGroup
     : OR_OP OP validationRules CP
     ;
 
+//TODO: support empty groups
 validationRules
     : validationRule (COMMA validationRule)* COMMA?
     ;
