@@ -1,0 +1,5 @@
+(
+    .a (
+        Custom(1, -12.453, 'Str   some', true, false)
+    )
+)

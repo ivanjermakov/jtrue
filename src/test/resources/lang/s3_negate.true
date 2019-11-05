@@ -1,0 +1,9 @@
+(
+    NotNull,
+    .a !(
+        Null,
+    ),
+    .b (
+        NotNull
+    )
+)
