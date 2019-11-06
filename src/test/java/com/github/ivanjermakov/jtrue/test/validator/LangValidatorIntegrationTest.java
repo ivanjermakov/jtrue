@@ -1,67 +1,121 @@
 package com.github.ivanjermakov.jtrue.test.validator;
 
+import com.github.ivanjermakov.jtrue.exception.FieldAccessException;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationPredicate;
+import com.github.ivanjermakov.jtrue.model.ComplexObject;
 import com.github.ivanjermakov.jtrue.model.SimpleObject;
 import com.github.ivanjermakov.jtrue.util.SourceLoader;
 import com.github.ivanjermakov.jtrue.validator.LangValidator;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class LangValidatorIntegrationTest {
 
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS1() {
-		shouldValidateSimpleObjectWithQuery("/lang/s1_basic.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s1_basic.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS2() {
-		shouldValidateSimpleObjectWithQuery("/lang/s2_nested.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s2_nested.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS3() {
-		shouldValidateSimpleObjectWithQuery("/lang/s3_negate.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s3_negate.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS4() {
-		shouldValidateSimpleObjectWithQuery("/lang/s4_or.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s4_or.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS5() {
-		shouldValidateSimpleObjectWithQuery("/lang/s5_params.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s5_params.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS6() {
-		shouldValidateSimpleObjectWithQuery("/lang/s6_root_selector.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s6_root_selector.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
-	@Ignore
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS7() {
-		shouldValidateSimpleObjectWithQuery("/lang/s7_all.true", new SimpleObject(1, 'b'));
 	}
 
-	@Ignore
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS8() {
-		shouldValidateSimpleObjectWithQuery("/lang/s8_any.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s8_any.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
 	@Test
 	public void shouldValidateSimpleObjectWithQueryS9() {
-		shouldValidateSimpleObjectWithQuery("/lang/s9_params.true", new SimpleObject(1, 'b'));
+		LangValidator<SimpleObject> validator = setup("/lang/s9_params.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
 	}
 
-	private void shouldValidateSimpleObjectWithQuery(String path, SimpleObject object) {
+	@Test
+	public void shouldNotValidateSimpleObjectWithQueryS10() {
+		LangValidator<SimpleObject> validator = setup("/lang/s10_all.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertFalse(result);
+	}
+
+	@Test
+	public void shouldNotValidateSimpleObjectWithQueryS11() {
+		LangValidator<SimpleObject> validator = setup("/lang/s11_any.true");
+		boolean result = validator.validate(new SimpleObject(1, 'b'));
+
+		assertTrue(result);
+	}
+
+	@Test
+	public void shouldValidateComplexObjectWithQueryC1() {
+		LangValidator<ComplexObject> validator = setup("/lang/c1.true");
+		boolean result = validator.validate(new ComplexObject(null, new SimpleObject(1, 'b')));
+
+		assertTrue(result);
+	}
+
+	@Test(expected = FieldAccessException.class)
+	public void shouldNotValidateComplexObjectWithQueryC2() {
+		LangValidator<ComplexObject> validator = setup("/lang/c2.true");
+		validator.validate(new ComplexObject(null, new SimpleObject(1, 'b')));
+	}
+
+	private <T> LangValidator<T> setup(String path) {
 		Map<String, ValidationPredicate> predicateMap = new HashMap<>();
 		predicateMap.put("NotNull", (o, __) -> o != null);
 		predicateMap.put("Null", (o, __) -> o == null);
@@ -74,14 +128,10 @@ public class LangValidatorIntegrationTest {
 						args[3] instanceof Boolean && args[3].equals(true) &&
 						args[4] instanceof Boolean && args[4].equals(false));
 
-		LangValidator<SimpleObject> validator = new LangValidator<>(
+		return new LangValidator<>(
 				SourceLoader.load(path),
 				predicateMap
 		);
-
-		boolean result = validator.validate(object);
-
-		Assert.assertTrue(result);
 	}
 
 }

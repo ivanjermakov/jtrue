@@ -3,3 +3,11 @@
         NotNull
     )
 )
+
+(
+    |(
+        . (NotNull),
+        .a (NotNull),
+        .b (NotNull)
+    )
+)

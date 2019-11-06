@@ -1,0 +1,24 @@
+|(
+    (
+        *(., .b) (
+            NotNull
+        ),
+        .a (
+            Null
+        )
+    ),
+    (
+        ?(., .a, .b) (
+            Null
+        ),
+        .b.a (
+            Equals(1)
+        ),
+        .b.b (
+            Equals('b')
+        ),
+        . (
+            NotNull
+        )
+    )
+)
