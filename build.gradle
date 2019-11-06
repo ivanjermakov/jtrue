@@ -28,6 +28,7 @@ jacocoTestReport {
 }
 
 coveralls {
+    sourceDirs += ['src/main/java/com/github/ivanjermakov/jtrue']
     jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
 }
 
