@@ -5,6 +5,10 @@ import com.github.ivanjermakov.jtrue.exception.SyntaxException;
 import com.github.ivanjermakov.jtrue.lang.cst.VisitorConfiguration;
 import com.github.ivanjermakov.jtrue.lang.model.FieldValue;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationResult;
+import org.antlr.v4.runtime.ParserRuleContext;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FieldSelectorVisitor<T> implements LangVisitor<ValidationResult> {
 
@@ -25,23 +29,72 @@ public class FieldSelectorVisitor<T> implements LangVisitor<ValidationResult> {
 			return new ObjectVisitor<>(object, config.withTarget(fieldValue.value)).visit();
 		}
 
-//		TODO: all any support
-		/*if (fieldSelector.allFieldSelector() == null && fieldSelector.anyFieldSelector() == null) {
+		if (fieldSelector.allFieldSelector() == null && fieldSelector.anyFieldSelector() == null) {
 			throw new SyntaxException("'allFieldSelector' node must contain 'fieldPath' node");
 		}
 
-		List<FieldValue> fieldValues;
-		if (fieldSelector.allFieldSelector() != null) {
-			fieldValues = new AllFieldSelectorVisitor<>(fieldSelector.allFieldSelector(), config).visit();
-			JtrueParser.AndGroupContext andGroup = new JtrueParser.AndGroupContext(null, 1);
-			andGroup.addChild()
+		JtrueParser.ValidationRuleContext validationRule = (JtrueParser.ValidationRuleContext) fieldSelector.parent.parent;
+		validationRule.children.clear();
 
-			new AndGroupVisitor<>(andGroup, config.withTarget(fieldValue));
+		JtrueParser.GroupContext group = null;
+		if (fieldSelector.allFieldSelector() != null) {
+			group = transformForFieldSelector((JtrueParser.FieldRuleContext) fieldSelector.parent, true);
 		}
+
 		if (fieldSelector.anyFieldSelector() != null) {
-			fieldValues = new AnyFieldSelectorVisitor<>(fieldSelector.anyFieldSelector(), config).visit();
-		}*/
-		throw new SyntaxException();
+			group = transformForFieldSelector((JtrueParser.FieldRuleContext) fieldSelector.parent, false);
+		}
+
+		group.setParent(validationRule);
+		validationRule.addChild(group);
+
+		return new GroupVisitor<>(group, config.withTarget(config.target)).visit();
+	}
+
+	private JtrueParser.GroupContext transformForFieldSelector(JtrueParser.FieldRuleContext fieldRule, boolean isAnd) {
+		JtrueParser.FieldSelectorContext fieldSelector = fieldRule.fieldSelector();
+		JtrueParser.FieldPathsContext fieldPaths;
+		if (isAnd) {
+			fieldPaths = fieldSelector.allFieldSelector().fieldPaths();
+		} else {
+			fieldPaths = fieldSelector.anyFieldSelector().fieldPaths();
+		}
+		JtrueParser.ObjectContext object = fieldRule.object();
+
+		JtrueParser.GroupContext group = new JtrueParser.GroupContext(null, -1);
+
+		ParserRuleContext andOrGroup;
+		if (isAnd) {
+			andOrGroup = new JtrueParser.AndGroupContext(group, group.invokingState);
+		} else {
+			andOrGroup = new JtrueParser.OrGroupContext(group, group.invokingState);
+		}
+
+		JtrueParser.ValidationRulesContext validationRules = new JtrueParser.ValidationRulesContext(andOrGroup, andOrGroup.invokingState);
+
+		List<JtrueParser.ValidationRuleContext> validationRuleList = fieldPaths.fieldPath()
+				.stream()
+				.map(fp -> {
+					JtrueParser.ValidationRuleContext vr = new JtrueParser.ValidationRuleContext(validationRules, validationRules.invokingState);
+					JtrueParser.FieldRuleContext fr = new JtrueParser.FieldRuleContext(vr, vr.invokingState);
+
+					JtrueParser.FieldSelectorContext fs = new JtrueParser.FieldSelectorContext(fr, fr.invokingState);
+					JtrueParser.SingleFieldSelectorContext sfs = new JtrueParser.SingleFieldSelectorContext(fs, fs.invokingState);
+					sfs.addChild(fp);
+					fs.addChild(sfs);
+					fr.addChild(fs);
+					fr.addChild(object);
+					vr.addChild(fr);
+
+					return vr;
+				})
+				.collect(Collectors.toList());
+
+		validationRuleList.forEach(validationRules::addChild);
+		andOrGroup.addChild(validationRules);
+		group.addChild(andOrGroup);
+
+		return group;
 	}
 
 }
