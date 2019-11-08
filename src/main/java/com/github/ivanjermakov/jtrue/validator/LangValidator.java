@@ -10,7 +10,7 @@ import com.github.ivanjermakov.jtrue.lang.model.ValidationResult;
 import java.util.Map;
 
 /**
- * Low-level implementation of validator that use jtrue validation language
+ * Low-level implementation of validator that uses jtrue validation language
  *
  * @param <T> type of object to be validated
  */
