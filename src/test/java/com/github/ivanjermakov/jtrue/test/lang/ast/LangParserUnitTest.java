@@ -38,7 +38,6 @@ public class LangParserUnitTest {
 		shouldParseQuery("/lang/query5_comments.true");
 	}
 
-	//	TODO: move to test utils
 	private void shouldParseQuery(String path) throws URISyntaxException, IOException {
 		String source = Files.readString(Path.of(LangParser.class.getResource(path).toURI()));
 
