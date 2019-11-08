@@ -1,6 +1,7 @@
 package com.github.ivanjermakov.jtrue.test.validator;
 
 import com.github.ivanjermakov.jtrue.exception.FieldAccessException;
+import com.github.ivanjermakov.jtrue.lang.model.ValidationError;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationPredicate;
 import com.github.ivanjermakov.jtrue.model.ComplexObject;
 import com.github.ivanjermakov.jtrue.model.SimpleObject;
@@ -9,9 +10,11 @@ import com.github.ivanjermakov.jtrue.validator.LangValidator;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -113,6 +116,35 @@ public class LangValidatorIntegrationTest {
 	public void shouldNotValidateComplexObjectWithQueryC2() {
 		LangValidator<ComplexObject> validator = setup("/lang/c2.true");
 		validator.validate(new ComplexObject(null, new SimpleObject(1, 'b')));
+	}
+
+	@Test
+	public void shouldValidateSimpleObjectWithoutErrorE1() {
+		LangValidator<SimpleObject> validator = setup("/lang/e1.true");
+		ValidationError error = validator.error(new SimpleObject(1, 'b'));
+
+		assertFalse(error.isError);
+	}
+
+	@Test
+	public void shouldNotValidateSimpleObjectWithErrorE1() {
+		LangValidator<SimpleObject> validator = setup("/lang/e1.true");
+		ValidationError error = validator.error(null);
+
+		assertTrue(error.isError);
+		assertTrue(error.message.isEmpty());
+		assertEquals("the object is null", error.causes.get(0).message);
+	}
+
+	@Test
+	public void shouldNotValidateComplexObjectWithErrorE2() {
+		LangValidator<ComplexObject> validator = setup("/lang/e2.true");
+		ValidationError error = validator.error(new ComplexObject(null, new SimpleObject(1, 'b')));
+
+		assertTrue(error.isError);
+		List<ValidationError> flat = error.flat();
+		System.out.println(error);
+		assertEquals(3, flat.size());
 	}
 
 	private <T> LangValidator<T> setup(String path) {

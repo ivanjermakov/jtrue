@@ -1,0 +1,17 @@
+(
+    NotNull -> 'the object is null',
+    .a (
+        NotNull -> 'a is null',
+        Equals(5) -> 'a is not equal to 5'
+    ),
+    .b (
+        NotNull -> 'b is null'
+    ),
+    .b.a (
+        NotNull -> 'b.a is null'
+        Equals(5) -> 'b.a is not equal to 5'
+    ),
+    .b.b (
+        Null -> 'b.b is not null'
+    )
+)
