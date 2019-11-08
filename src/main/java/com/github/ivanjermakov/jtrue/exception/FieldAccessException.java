@@ -17,8 +17,4 @@ public class FieldAccessException extends LangException {
 		super(cause);
 	}
 
-	public FieldAccessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
 }

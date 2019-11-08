@@ -17,8 +17,4 @@ public class LangException extends RuntimeException {
 		super(cause);
 	}
 
-	public LangException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
 }
