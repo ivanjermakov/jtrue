@@ -1,3 +1,4 @@
+//TODO: object level errorMessage
 grammar Jtrue;
 
 @header {
@@ -27,9 +28,9 @@ orGroup
     : OR_OP OP validationRules CP
     ;
 
-//TODO: support empty groups
 validationRules
-    : validationRule (COMMA validationRule)* COMMA?
+    : ()
+    | validationRule (COMMA validationRule)* COMMA?
     ;
 
 validationRule
