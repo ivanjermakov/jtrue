@@ -29,6 +29,7 @@ public class AndGroupVisitor<T> implements LangVisitor<ValidationResult> {
 					.allMatch(r -> r.isValid);
 
 			ValidationError error = new ValidationError(
+					!isValid,
 					results
 							.stream()
 							.filter(r -> !r.isValid)

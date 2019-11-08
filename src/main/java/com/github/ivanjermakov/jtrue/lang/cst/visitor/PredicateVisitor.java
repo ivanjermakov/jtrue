@@ -51,10 +51,10 @@ public class PredicateVisitor<T> implements LangVisitor<ValidationResult> {
 
 		boolean result = validationPredicate.test(config.target, params);
 
-		ValidationError error = new ValidationError();
+		ValidationError error = new ValidationError(false);
 		if (!result && errorMessage != null) {
-			String message = this.errorMessage.str().getText();
-			error = new ValidationError(message);
+			String message = new StrVisitor(this.errorMessage.str()).visit();
+			error = new ValidationError(true, message);
 		}
 
 		return new ValidationResult(result, error);
