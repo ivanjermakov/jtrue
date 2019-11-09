@@ -1,7 +1,7 @@
 # JTrue: Java object validation library
 
 [![Build Status](https://img.shields.io/travis/com/ivanjermakov/jtrue/master)](https://travis-ci.com/ivanjermakov/jtrue)
-[![Coverage Status](https://img.shields.io/coveralls/github/ivanjermakov/jtrue/master)](https://coveralls.io/github/ivanjermakov/jtrue?branch=master)
+[![codecov](https://codecov.io/gh/ivanjermakov/jtrue/branch/master/graph/badge.svg)](https://codecov.io/gh/ivanjermakov/jtrue)
 [![](https://jitpack.io/v/ivanjermakov/jtrue.svg)](https://jitpack.io/#ivanjermakov/jtrue)
 
 JTrue - Java functional-style lazy object validation library.
