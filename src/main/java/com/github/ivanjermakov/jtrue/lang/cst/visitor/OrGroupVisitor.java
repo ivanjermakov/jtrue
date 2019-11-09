@@ -3,8 +3,8 @@ package com.github.ivanjermakov.jtrue.lang.cst.visitor;
 import com.github.ivanjermakov.antlr.JtrueParser;
 import com.github.ivanjermakov.jtrue.exception.SyntaxException;
 import com.github.ivanjermakov.jtrue.lang.cst.VisitorConfiguration;
-import com.github.ivanjermakov.jtrue.lang.model.ValidationError;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationResult;
+import com.github.ivanjermakov.jtrue.lang.model.ValidationTree;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,12 +28,11 @@ public class OrGroupVisitor<T> implements LangVisitor<ValidationResult> {
 					.stream()
 					.anyMatch(r -> r.isValid);
 
-			ValidationError error = new ValidationError(
-					!isValid,
+			ValidationTree error = new ValidationTree(
+					isValid,
 					results
 							.stream()
-							.filter(r -> !r.isValid)
-							.map(r -> r.validationError)
+							.map(r -> r.validationTree)
 							.collect(Collectors.toList())
 			);
 

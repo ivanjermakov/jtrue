@@ -3,11 +3,11 @@ package com.github.ivanjermakov.jtrue.lang.model;
 public class ValidationResult {
 
 	public final boolean isValid;
-	public final ValidationError validationError;
+	public final ValidationTree validationTree;
 
-	public ValidationResult(boolean isValid, ValidationError validationError) {
+	public ValidationResult(boolean isValid, ValidationTree validationTree) {
 		this.isValid = isValid;
-		this.validationError = validationError;
+		this.validationTree = validationTree;
 	}
 
 }

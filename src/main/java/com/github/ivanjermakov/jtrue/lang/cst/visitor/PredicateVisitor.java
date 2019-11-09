@@ -4,9 +4,9 @@ import com.github.ivanjermakov.antlr.JtrueParser;
 import com.github.ivanjermakov.jtrue.exception.LangException;
 import com.github.ivanjermakov.jtrue.exception.SyntaxException;
 import com.github.ivanjermakov.jtrue.lang.cst.VisitorConfiguration;
-import com.github.ivanjermakov.jtrue.lang.model.ValidationError;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationPredicate;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationResult;
+import com.github.ivanjermakov.jtrue.lang.model.ValidationTree;
 import com.github.ivanjermakov.jtrue.lang.type.LangType;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,13 +51,13 @@ public class PredicateVisitor<T> implements LangVisitor<ValidationResult> {
 
 		boolean result = validationPredicate.test(config.target, params);
 
-		ValidationError error = new ValidationError(false);
-		if (!result && errorMessage != null) {
+		ValidationTree tree = new ValidationTree(result);
+		if (errorMessage != null) {
 			String message = new StrVisitor(this.errorMessage.str()).visit();
-			error = new ValidationError(true, message);
+			tree = new ValidationTree(result, message);
 		}
 
-		return new ValidationResult(result, error);
+		return new ValidationResult(result, tree);
 	}
 
 }

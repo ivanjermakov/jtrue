@@ -3,9 +3,9 @@ package com.github.ivanjermakov.jtrue.validator;
 import com.github.ivanjermakov.jtrue.lang.ast.LangParser;
 import com.github.ivanjermakov.jtrue.lang.cst.VisitorConfiguration;
 import com.github.ivanjermakov.jtrue.lang.cst.visitor.ObjectVisitor;
-import com.github.ivanjermakov.jtrue.lang.model.ValidationError;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationPredicate;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationResult;
+import com.github.ivanjermakov.jtrue.lang.model.ValidationTree;
 
 import java.util.Map;
 
@@ -31,8 +31,8 @@ public class LangValidator<T> implements Validatable<T> {
 		return check(t).isValid;
 	}
 
-	public ValidationError error(T t) {
-		return check(t).validationError;
+	public ValidationTree tree(T t) {
+		return check(t).validationTree;
 	}
 
 	private ValidationResult check(T t) {

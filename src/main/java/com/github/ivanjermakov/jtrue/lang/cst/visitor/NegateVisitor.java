@@ -19,7 +19,7 @@ public class NegateVisitor<T> implements LangVisitor<ValidationResult> {
 	public ValidationResult visit() {
 		if (negate.group() != null) {
 			ValidationResult result = new GroupVisitor<>(negate.group(), config).visit();
-			return new ValidationResult(!result.isValid, result.validationError);
+			return new ValidationResult(!result.isValid, result.validationTree);
 		}
 
 		throw new SyntaxException("'negate' node must contain 'group' node");
