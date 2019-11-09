@@ -39,10 +39,6 @@ validationRule
     | fieldRule
     ;
 
-errorMessage
-    : ARROW str
-    ;
-
 fieldRule
     : fieldSelector object
     ;
@@ -81,6 +77,10 @@ predicate
     | predicateName OP predicateParameters CP
     ;
 
+errorMessage
+    : ARROW str
+    ;
+
 predicateName
     : WORD
     ;
@@ -99,8 +99,9 @@ num
     : NUMBER
     ;
 
+//TODO: escape chars support
 str
-    : QUOTE .*? QUOTE
+    : QUOTE (~QUOTE)* QUOTE
     ;
 
 bool
