@@ -1,8 +1,8 @@
 package com.github.ivanjermakov.jtrue.test.validator;
 
 import com.github.ivanjermakov.jtrue.exception.FieldAccessException;
-import com.github.ivanjermakov.jtrue.lang.model.ValidationError;
 import com.github.ivanjermakov.jtrue.lang.model.ValidationPredicate;
+import com.github.ivanjermakov.jtrue.lang.model.ValidationTree;
 import com.github.ivanjermakov.jtrue.model.ComplexObject;
 import com.github.ivanjermakov.jtrue.model.SimpleObject;
 import com.github.ivanjermakov.jtrue.util.SourceLoader;
@@ -121,30 +121,58 @@ public class LangValidatorIntegrationTest {
 	@Test
 	public void shouldValidateSimpleObjectWithoutErrorE1() {
 		LangValidator<SimpleObject> validator = setup("/lang/e1.true");
-		ValidationError error = validator.error(new SimpleObject(1, 'b'));
+		ValidationTree tree = validator.tree(new SimpleObject(1, 'b'));
 
-		assertFalse(error.isError);
+		assertTrue(tree.isValid);
 	}
 
 	@Test
 	public void shouldNotValidateSimpleObjectWithErrorE1() {
 		LangValidator<SimpleObject> validator = setup("/lang/e1.true");
-		ValidationError error = validator.error(null);
+		ValidationTree tree = validator.tree(null);
 
-		assertTrue(error.isError);
-		assertTrue(error.message.isEmpty());
-		assertEquals("the object is null", error.causes.get(0).message);
+		assertFalse(tree.isValid);
+		assertTrue(tree.errorMessage.isEmpty());
+		assertEquals("the object is null", tree.children.get(0).errorMessage);
+	}
+
+	@Test
+	public void shouldValidateSimpleObjectWithoutErrorE3() {
+		LangValidator<SimpleObject> validator = setup("/lang/e3.true");
+		ValidationTree tree = validator.tree(new SimpleObject(1, 'b'));
+
+		assertTrue(tree.isValid);
+		assertEquals("the object is null", tree.flat().get(0).errorMessage);
 	}
 
 	@Test
 	public void shouldNotValidateComplexObjectWithErrorE2() {
 		LangValidator<ComplexObject> validator = setup("/lang/e2.true");
-		ValidationError error = validator.error(new ComplexObject(null, new SimpleObject(1, 'b')));
+		ValidationTree tree = validator.tree(new ComplexObject(null, new SimpleObject(1, 'b')));
 
-		assertTrue(error.isError);
-		List<ValidationError> flat = error.flat();
-		System.out.println(error);
-		assertEquals(3, flat.size());
+		assertFalse(tree.isValid);
+		List<ValidationTree> flat = tree.flat();
+		System.out.println(tree);
+		assertEquals(2, flat.stream().filter(t -> !t.isValid).count());
+	}
+
+	@Test
+	public void shouldNotValidatePrimitiveWithErrorE4() {
+		LangValidator<Integer> validator = setup("/lang/e4.true");
+		ValidationTree tree = validator.tree(1);
+
+		assertFalse(tree.isValid);
+		List<ValidationTree> flat = tree.flat();
+		System.out.println(tree);
+		assertEquals(
+				"not equal to 5",
+				flat
+						.stream()
+						.filter(t -> !t.isValid)
+						.findFirst()
+						.orElseThrow()
+						.errorMessage
+		);
 	}
 
 	private <T> LangValidator<T> setup(String path) {
