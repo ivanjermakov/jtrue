@@ -12,12 +12,12 @@ public class NotEmptyCollectionUnitTest {
 
 	@Test
 	public void shouldNotBeEmpty() {
-		assertTrue(new NotEmptyCollection<>().test(Collections.singletonList(new Object())));
+		assertTrue(new NotEmptyCollection().test(Collections.singletonList(new Object())));
 	}
 
 	@Test
 	public void shouldBeEmpty() {
-		assertFalse(new NotEmptyCollection<>().test(Collections.emptyList()));
+		assertFalse(new NotEmptyCollection().test(Collections.emptyList()));
 	}
 
 }

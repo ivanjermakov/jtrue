@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.function.Predicate;
 
-public class Size implements Predicate<Collection> {
+public class Size implements Predicate<Collection<?>> {
 
 	private final int size;
 
@@ -15,7 +15,7 @@ public class Size implements Predicate<Collection> {
 	}
 
 	@Override
-	@Contract(pure = true)
+	@Contract(pure = true, value = "null -> fail")
 	public boolean test(@NotNull Collection collection) {
 		return collection.size() == size;
 	}
