@@ -11,7 +11,7 @@ JTrue - Java functional-style lazy object validation library.
 The first step is to include JTrue into your project, for example, as a Gradle dependency:
 1. Add it in your root build.gradle at the end of repositories
 
-```groovy
+```
 allprojects {
     repositories {
         maven { url 'https://jitpack.io' }
@@ -21,7 +21,7 @@ allprojects {
         
 2. Add the dependency
 
-```java
+```
 dependencies {
     implementation 'com.github.ivanjermakov:jtrue:Tag'
 }
@@ -31,7 +31,7 @@ dependencies {
 
 Let's rule if given string is blank:
 
-```java
+```
 new Validator<String>()
         .rule(new NotBlank())
         .validate("Hello, World!");
@@ -68,7 +68,7 @@ Binaries and dependency information for Maven, Gradle and others can be found on
 
 To build:
 
-```shell script
+```
 $ git clone https://github.com/ivanjermakov/jtrue.git
 $ gradle build
 ```
