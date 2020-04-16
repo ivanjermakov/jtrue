@@ -1,0 +1,12 @@
+com.github.ivanjermakov.antlr
+com.github.ivanjermakov.jtrue.exception
+com.github.ivanjermakov.jtrue.function
+com.github.ivanjermakov.jtrue.lang.ast
+com.github.ivanjermakov.jtrue.lang.cst
+com.github.ivanjermakov.jtrue.lang.cst.visitor
+com.github.ivanjermakov.jtrue.lang.model
+com.github.ivanjermakov.jtrue.lang.type
+com.github.ivanjermakov.jtrue.lang.type.parse
+com.github.ivanjermakov.jtrue.predicate
+com.github.ivanjermakov.jtrue.util
+com.github.ivanjermakov.jtrue.validator
