@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 public class NotBlank implements Predicate<String> {
 
 	@Override
-	@Contract(pure = true)
+	@Contract(pure = true, value = "null -> fail")
 	public boolean test(@NotNull String t) {
 		return !t.trim().isEmpty();
 	}

@@ -9,7 +9,7 @@ public class And implements BinaryOperator<Boolean> {
 
 	@Override
 	@NotNull
-	@Contract(pure = true)
+	@Contract(pure = true, value = "null, null -> fail")
 	public Boolean apply(@NotNull Boolean b1, @NotNull Boolean b2) {
 		return b1 && b2;
 	}

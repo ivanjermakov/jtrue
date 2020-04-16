@@ -34,7 +34,7 @@ public class PredicateVisitor<T> implements LangVisitor<ValidationResult> {
 			throw new SyntaxException("'predicate' node must contain 'predicateName' node");
 		}
 
-		ValidationPredicate<T> validationPredicate = config.predicateMap.get(name);
+		ValidationPredicate<T> validationPredicate = (ValidationPredicate<T>) config.predicateMap.get(name);
 		if (validationPredicate == null) {
 			throw new LangException("predicate with name '" + name + "' was not found in provided predicate set");
 		}
@@ -49,15 +49,20 @@ public class PredicateVisitor<T> implements LangVisitor<ValidationResult> {
 					.toArray();
 		}
 
-		boolean result = validationPredicate.test(config.target, params);
+		try {
+			boolean result = validationPredicate.test(config.target, params);
 
-		ValidationTree tree = new ValidationTree(result);
-		if (errorMessage != null) {
-			String message = new StrVisitor(this.errorMessage.str()).visit();
-			tree = new ValidationTree(result, message);
+			ValidationTree tree = errorMessage == null
+					? new ValidationTree(result)
+					: new ValidationTree(result, new StrVisitor(this.errorMessage.str()).visit());
+
+			return new ValidationResult(result, tree);
+		} catch (NullPointerException e) {
+			return new ValidationResult(
+					false,
+					new ValidationTree(false, "null value passed into not-null predicate")
+			);
 		}
-
-		return new ValidationResult(result, tree);
 	}
 
 }

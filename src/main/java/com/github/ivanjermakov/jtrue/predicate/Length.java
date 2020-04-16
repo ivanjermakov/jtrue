@@ -14,7 +14,7 @@ public class Length implements Predicate<String> {
 	}
 
 	@Override
-	@Contract(pure = true)
+	@Contract(pure = true, value = "null -> fail")
 	public boolean test(@NotNull String s) {
 		return s.length() == length;
 	}

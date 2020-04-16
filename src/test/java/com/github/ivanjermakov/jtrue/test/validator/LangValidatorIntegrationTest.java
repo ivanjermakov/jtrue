@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -176,11 +175,7 @@ public class LangValidatorIntegrationTest {
 	}
 
 	private <T> LangValidator<T> setup(String path) {
-		Map<String, ValidationPredicate> predicateMap = new HashMap<>();
-		predicateMap.put("NotNull", (o, __) -> o != null);
-		predicateMap.put("Null", (o, __) -> o == null);
-		predicateMap.put("True", (o, __) -> true);
-		predicateMap.put("Equals", (o, args) -> Objects.equals(o, args[0]));
+		Map<String, ValidationPredicate<?>> predicateMap = new HashMap<>();
 		predicateMap.put("Custom", (o, args) ->
 				args[0] instanceof Integer && args[0].equals(1) &&
 						args[1] instanceof Double && args[1].equals(-12.453) &&
